@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class ItemSpawner : MonoBehaviour
 {
-    [SerializeField] private BoxCollider2D spawningArea;
+    public BoxCollider2D SpawningArea;
+    [SerializeField] private SnakeHandler[] player; 
 
+    private Vector2Int itemPosition; 
     public enum FoodType
     {
-        ripeFood, 
-        rawFood
+        massGainer, 
+        massBurner
     }
 
     public enum PowerUpType
@@ -21,18 +23,26 @@ public class ItemSpawner : MonoBehaviour
 
     public void Start()
     {
-        spawnFood(); 
+        spawnItem(); 
     }
-    private void spawnFood()
+    private void spawnItem()
     {
-        Bounds bounds = this.spawningArea.bounds;
+        Bounds bounds = this.SpawningArea.bounds;
 
-        float x = Random.Range(bounds.min.x, bounds.max.x);
-        float y = Random.Range(bounds.min.y, bounds.max.y);
+        // item shouldn't be spawned at the player position
+        do
+        {
+            itemPosition.x = Mathf.RoundToInt(Random.Range(bounds.min.x, bounds.max.x));
+            itemPosition.y = Mathf.RoundToInt(Random.Range(bounds.min.y, bounds.max.y));
+        }
+        while (player[0].GetPlayerPositionList().IndexOf(itemPosition) != -1); 
+        
+        this.transform.position = new Vector2(itemPosition.x, itemPosition.y);
 
-        this.transform.position = new Vector2(Mathf.Round(x), Mathf.Round(y));
-
-        Invoke("spawnFood", 3f); 
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        spawnItem(); 
+    }
 }

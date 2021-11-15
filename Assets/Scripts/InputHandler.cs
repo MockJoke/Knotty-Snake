@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class InputHandler : MonoBehaviour
 {  
-    public SnakeHandler[] players;
+    public SnakeHandler[] player;
 
     private LifeStatus lifeStatus;
-    private PlayerID playerID; 
+    private PlayerID playerID;
 
-    //private void Start()
-    //{
-    //    SnakeHandler[] players = FindObjectsOfType<SnakeHandler>();
-    //    Debug.Log(players); 
-    //}
+    private void Start()
+    {
+        player = FindObjectsOfType<SnakeHandler>();
+        Debug.Log(player.Length);
+    }
     private void Update()
     {
-        switch (players[0].lifeStatus)
+        switch (player[0].lifeStatus)
         {
             case LifeStatus.Alive:
                 PlayerInput(); 
@@ -29,18 +29,24 @@ public class InputHandler : MonoBehaviour
         switch(playerID)
         {
             case PlayerID.player1:
-                players[0].Move(); 
+                player[0].Movement(); 
                 break;
         }
     }
     public void PlayerInput()
     {
-        if(playerID == PlayerID.player1)
-        {
+        //if(playerID == PlayerID.player1)
+        //{
             if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D))
             {
-                players[0].InputDirection();
+                player[0].InputDirection();
             }
-        }
+            else if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                Debug.Log(player.Length);
+                player[1].InputDirection();
+            }
+
+        //}
     }
 }

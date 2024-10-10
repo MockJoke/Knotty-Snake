@@ -9,12 +9,13 @@ public class InputHandler : MonoBehaviour
     private LifeStatus lifeStatus;
     private PlayerID playerID;
 
-    private void Start()
+    void Start()
     {
         player = FindObjectsOfType<SnakeHandler>();
-        Debug.Log(player.Length);
+        // Debug.Log(player.Length);
     }
-    private void Update()
+    
+    void Update()
     {
         switch (player[0].lifeStatus)
         {
@@ -24,7 +25,7 @@ public class InputHandler : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    void FixedUpdate()
     {
         switch(playerID)
         {
@@ -33,6 +34,7 @@ public class InputHandler : MonoBehaviour
                 break;
         }
     }
+    
     public void PlayerInput()
     {
         //if(playerID == PlayerID.player1)
@@ -41,12 +43,11 @@ public class InputHandler : MonoBehaviour
             {
                 player[0].InputDirection();
             }
-            else if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                Debug.Log(player.Length);
-                player[1].InputDirection();
-            }
-
+            // else if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow))
+            // {
+            //     Debug.Log(player.Length);
+            //     player[1].InputDirection();
+            // }
         //}
     }
 }

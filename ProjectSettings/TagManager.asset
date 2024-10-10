@@ -8,6 +8,9 @@ TagManager:
   - Player2
   - MassGainer
   - MassBurner
+  - ScoreBoost
+  - Shield
+  - SpeedUp
   layers:
   - Default
   - TransparentFX

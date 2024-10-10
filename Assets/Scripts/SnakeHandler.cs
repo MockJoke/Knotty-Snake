@@ -22,11 +22,11 @@ public class SnakeHandler : MonoBehaviour
     public PlayerID playerID;
     public LifeStatus lifeStatus;
 
-    public BoxCollider2D WrappedArea; 
+    [SerializeField] private BoxCollider2D WrappedArea; 
 
-    [Tooltip("Amount of body segments by which snake size will increase/decrease on consuming food")]
-    [Range(1, 3)]  public int segmentCnt; 
-    [Tooltip("Initial snake body size")] [Range(0,5)] public int initialSnakeSize;          
+    // [Tooltip("Amount of body segments by which snake size will increase/decrease on consuming food")]
+    // [Range(1, 3)]  public int segmentCnt; 
+    [Tooltip("Initial snake body size")] [Range(0,5)] public int InitialSnakeSize = 1;          
 
     private List<Vector2Int> playerPositionList;     //list of positions where the snake has been
     private List<Transform> bodySegmentList;
@@ -54,7 +54,7 @@ public class SnakeHandler : MonoBehaviour
         bodySegmentList.Clear();
         bodySegmentList.Add(SnakeHead.transform);
 
-        for (int i = 1; i < initialSnakeSize; i++)
+        for (int i = 1; i < InitialSnakeSize; i++)
         {
             Transform segment = Instantiate(bodySegment);
             bodySegmentList.Add(segment);
@@ -95,13 +95,13 @@ public class SnakeHandler : MonoBehaviour
 
     public void Movement()
     {
-        //Make the snake body move forward, each segment is following the one in front of it 
+        // Make the snake body move forward, each segment is following the one in front of it 
         for (int i = bodySegmentList.Count - 1; i > 0; i--)
         {
             bodySegmentList[i].position = bodySegmentList[i - 1].position;
         }
         
-        //updating the head position
+        // Updating the head position
         playerPosition.x = Mathf.RoundToInt(this.transform.position.x) + this.moveDirection.x;
         playerPosition.y = Mathf.RoundToInt(this.transform.position.y) + this.moveDirection.y;
         this.transform.position = new Vector2(playerPosition.x, playerPosition.y);
@@ -134,20 +134,19 @@ public class SnakeHandler : MonoBehaviour
         }     
     }
 
-    public void AddBodySegment()
+    private void AddBodySegment(int count)
     {
-        for(int i=1; i < segmentCnt; i++)
+        for(int i=1; i < count; i++)
         {
-            Transform segment = Instantiate(bodySegment);
-            segment.position = bodySegmentList[bodySegmentList.Count - 1].position;
-            segment.transform.SetParent(snakeBodyContainer.transform);
+            Transform segment = Instantiate(bodySegment, snakeBodyContainer.transform, true);
+            segment.position = bodySegmentList[^1].position;
             bodySegmentList.Add(segment);
         }
     }
     
-    public void RemoveBodySegment()
+    private void RemoveBodySegment(int count)
     {
-        for (int i = 1; i < segmentCnt; i++)
+        for (int i = 1; i < count; i++)
         {
             Destroy(bodySegmentList[^1].gameObject);
             bodySegmentList.RemoveAt(bodySegmentList.Count - 1);
@@ -169,9 +168,18 @@ public class SnakeHandler : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.CompareTag("MassGainer"))
+        if (collision.gameObject.CompareTag($"MassGainer"))
         {
-            AddBodySegment(); 
+            Food food = collision.gameObject.GetComponent<Food>();
+
+            int count = 1;
+            
+            if (food != null)
+            {
+                count = food.lengthChangeAmt;
+            }
+            
+            AddBodySegment(count); 
         }
     }
 }

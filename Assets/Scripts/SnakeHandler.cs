@@ -91,7 +91,6 @@ public class SnakeHandler : MonoBehaviour
                 moveDirection = Vector2Int.left;
             }
         }
-        
     }
 
     public void Movement()
@@ -107,10 +106,10 @@ public class SnakeHandler : MonoBehaviour
         playerPosition.y = Mathf.RoundToInt(this.transform.position.y) + this.moveDirection.y;
         this.transform.position = new Vector2(playerPosition.x, playerPosition.y);
         
-        screenWrap(); 
+        ScreenWrap(); 
     }
 
-    private void screenWrap()
+    private void ScreenWrap()
     {
         Bounds bounds = this.WrappedArea.bounds;
 
@@ -145,14 +144,16 @@ public class SnakeHandler : MonoBehaviour
             bodySegmentList.Add(segment);
         }
     }
+    
     public void RemoveBodySegment()
     {
         for (int i = 1; i < segmentCnt; i++)
         {
-            Destroy(bodySegmentList[bodySegmentList.Count - 1].gameObject);
+            Destroy(bodySegmentList[^1].gameObject);
             bodySegmentList.RemoveAt(bodySegmentList.Count - 1);
         }            
     }
+    
     public Vector2Int GetPlayerPosition()
     {
         return playerPosition; 

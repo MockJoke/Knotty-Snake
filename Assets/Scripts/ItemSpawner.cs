@@ -1,48 +1,79 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-public class ItemSpawner : MonoBehaviour
+public class ItemSpawner<T> where T : MonoBehaviour, ISpawnable
 {
-    public BoxCollider2D SpawningArea;
-    [SerializeField] private SnakeHandler[] player; 
+    private Collider2D spawningArea;
+    private Transform parentTransform;
+    private List<T> itemPrefabs;
+    private float spawnRate;
 
-    private Vector2Int itemPosition; 
-    public enum FoodType
+    private float nextSpawnTime;
+    private Queue<T> itemPool = new Queue<T>();
+
+    public ItemSpawner(Collider2D area, Transform parent, List<T> prefabs, float rate)
     {
-        massGainer, 
-        massBurner
+        spawningArea = area;
+        parentTransform = parent;
+        itemPrefabs = prefabs;
+        spawnRate = rate;
     }
 
-    public enum PowerUpType
+    public void StartSpawning()
     {
-        Shield,
-        ScoreBoost,
-        SpeedUp
+        nextSpawnTime = Time.time + Random.Range(spawnRate - 1, spawnRate + 1);
     }
 
-    public void Start()
+    public void UpdateSpawner()
     {
-        spawnItem(); 
-    }
-    private void spawnItem()
-    {
-        Bounds bounds = this.SpawningArea.bounds;
-
-        // item shouldn't be spawned at the player position
-        do
+        if (Time.time >= nextSpawnTime)
         {
-            itemPosition.x = Mathf.RoundToInt(Random.Range(bounds.min.x, bounds.max.x));
-            itemPosition.y = Mathf.RoundToInt(Random.Range(bounds.min.y, bounds.max.y));
+            SpawnItem();
+            nextSpawnTime = Time.time + Random.Range(spawnRate - 1, spawnRate + 1);
         }
-        while (player[0].GetPlayerPositionList().IndexOf(itemPosition) != -1); 
-        
-        this.transform.position = new Vector2(itemPosition.x, itemPosition.y);
-
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void SpawnItem()
     {
-        spawnItem(); 
+        T newItem = GetPooledItem();
+        newItem.transform.SetParent(parentTransform);
+        newItem.transform.position = GetRandomSpawnPosition();
+        newItem.gameObject.SetActive(true);
+
+        // Use the item's specific LifeTime property
+        CoroutineRunner.Instance.StartCoroutine(DestroyItemAfterLifetime(newItem, Random.Range(newItem.LifeTime - 1, newItem.LifeTime + 1)));
+    }
+
+    private T GetPooledItem()
+    {
+        if (itemPool.Count >= itemPrefabs.Count)
+        {
+            return itemPool.Dequeue();
+        }
+        else
+        {
+            int randomIndex = Random.Range(0, itemPrefabs.Count);
+            return GameObject.Instantiate(itemPrefabs[randomIndex]);
+        }
+    }
+
+    private IEnumerator DestroyItemAfterLifetime(T item, float lifetime)
+    {
+        yield return new WaitForSeconds(lifetime);
+        item.gameObject.SetActive(false);
+        itemPool.Enqueue(item);
+    }
+
+    private Vector3 GetRandomSpawnPosition()
+    {
+        Bounds bounds = this.spawningArea.bounds;
+        
+        int x = Mathf.RoundToInt(Random.Range(bounds.min.x, bounds.max.x));
+        int y = Mathf.RoundToInt(Random.Range(bounds.min.y, bounds.max.y));
+        
+        return new Vector3(x, y, 0f);
     }
 }

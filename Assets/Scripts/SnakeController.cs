@@ -194,6 +194,7 @@ public class SnakeController : MonoBehaviour
     public void BoostScore(int amount)
     {
         score += amount;
+        UIManager.Instance.DisplayScore(score);
     }
 
     public void SpeedUp(float speedMultiplier, float duration)

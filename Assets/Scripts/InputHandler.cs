@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class InputHandler : MonoBehaviour
 {  
-    public SnakeHandler[] player;
+    public SnakeController[] player;
 
     private LifeStatus lifeStatus;
     private PlayerID playerID;
 
     void Start()
     {
-        player = FindObjectsOfType<SnakeHandler>();
+        player = FindObjectsOfType<SnakeController>();
         // Debug.Log(player.Length);
     }
     
@@ -30,7 +30,7 @@ public class InputHandler : MonoBehaviour
         switch (playerID)
         {
             case PlayerID.player1:
-                player[0].Movement(); 
+                player[0].Move(); 
                 break;
         }
     }

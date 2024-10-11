@@ -14,24 +14,37 @@ public enum PlayerID
     player2
 }
 
-public class SnakeHandler : MonoBehaviour
+public class SnakeController : MonoBehaviour
 {
     public PlayerID playerID;
     public LifeStatus lifeStatus;
-
+    
     [SerializeField] private BoxCollider2D WrappedArea; 
+    
+    [Header("Body Parts")]
     [SerializeField] private GameObject SnakeBodyContainer; 
     [SerializeField] private Transform BodySegment;           // prefab 
     [SerializeField] private Transform SnakeHead; 
-    
     [Tooltip("Initial snake body size")] [Range(0,5)] public int InitialSnakeSize = 1;          
+    
+    [Header("Movement Fields")]
+    [Range(1, 20)] public float InitSnakeSpeed = 5f;
+    
+    private float currSnakeSpeed;
+    private float moveTimer;
+    private bool isSpeedBoosted = false;
+    private Coroutine speedBoostCoroutine;
+
+    private bool isShieldActive = false;
+    
+    private int score = 0;
     
     private List<Transform> bodySegmentList;
     
     private Vector2Int moveDirection;
     private Vector2Int playerPosition;
     
-    private void Start()
+    void Start()
     {
         bodySegmentList = new List<Transform>();
         InitializeSnakeBody(); 
@@ -39,6 +52,9 @@ public class SnakeHandler : MonoBehaviour
         moveDirection = Vector2Int.right;           // Initiating the player direction 
 
         lifeStatus = LifeStatus.Alive; 
+        
+        currSnakeSpeed = InitSnakeSpeed;
+        moveTimer = 1f / currSnakeSpeed;
     }
 
     private void InitializeSnakeBody()
@@ -53,9 +69,8 @@ public class SnakeHandler : MonoBehaviour
 
         for (int i = 1; i < InitialSnakeSize; i++)
         {
-            Transform segment = Instantiate(BodySegment);
+            Transform segment = Instantiate(BodySegment, SnakeBodyContainer.transform, true);
             bodySegmentList.Add(segment);
-            segment.transform.SetParent(SnakeBodyContainer.transform);
         }
 
         SnakeHead.transform.position = Vector3.zero;
@@ -89,21 +104,32 @@ public class SnakeHandler : MonoBehaviour
             }
         }
     }
+    
+    public void Move()
+    {
+        moveTimer -= Time.fixedDeltaTime;
 
-    public void Movement()
+        if (moveTimer <= 0f)
+        {
+            UpdateMovement();
+            ScreenWrap();
+
+            moveTimer = 1f / currSnakeSpeed;
+        }
+    }
+
+    private void UpdateMovement()
     {
         // Make the snake body move forward, each segment is following the one in front of it 
         for (int i = bodySegmentList.Count - 1; i > 0; i--)
         {
             bodySegmentList[i].position = bodySegmentList[i - 1].position;
         }
-        
+            
         // Updating the head position
         playerPosition.x = Mathf.RoundToInt(this.transform.position.x) + this.moveDirection.x;
         playerPosition.y = Mathf.RoundToInt(this.transform.position.y) + this.moveDirection.y;
         this.transform.position = new Vector2(playerPosition.x, playerPosition.y);
-        
-        ScreenWrap(); 
     }
 
     private void ScreenWrap()
@@ -131,56 +157,70 @@ public class SnakeHandler : MonoBehaviour
         }     
     }
 
-    private void AddBodySegment(int count)
+    public void OnTriggerEnter2D(Collider2D collision)
     {
-        for (int i = 1; i <= count; i++)
+        ICollectible collectible = collision.GetComponent<ICollectible>();
+        
+        if (collectible != null)
+        {
+            collectible.OnCollect(this);
+        }
+    }
+
+    public void IncreaseLength(int amount)
+    {
+        for (int i = 1; i <= amount; i++)
         {
             Transform segment = Instantiate(BodySegment, SnakeBodyContainer.transform, true);
             segment.position = bodySegmentList[^1].position;
             bodySegmentList.Add(segment);
         }
     }
-    
-    private void RemoveBodySegment(int count)
+
+    public void DecreaseLength(int amount)
     {
-        for (int i = 1; i <= count; i++)
+        for (int i = 1; i <= amount; i++)
         {
             Destroy(bodySegmentList[^1].gameObject);
             bodySegmentList.RemoveAt(bodySegmentList.Count - 1);
-        }            
+        }
     }
 
-    public void OnTriggerEnter2D(Collider2D collision)
+    public void ActivateShield(float duration)
     {
-        if (collision.gameObject.CompareTag($"MassGainer"))
+        StartCoroutine(ShieldCoroutine(duration));
+    }
+
+    public void BoostScore(int amount)
+    {
+        score += amount;
+    }
+
+    public void SpeedUp(float speedMultiplier, float duration)
+    {
+        if (isSpeedBoosted && speedBoostCoroutine != null)
         {
-            Food food = collision.gameObject.GetComponent<Food>();
-            food.gameObject.SetActive(false);
-            
-            int count = 1;
-            
-            if (food != null)
-            {
-                count = food.lengthChangeAmt;
-            }
-            
-            AddBodySegment(count); 
+            StopCoroutine(speedBoostCoroutine);
         }
-        else if (collision.gameObject.CompareTag($"MassBurner"))
-        {
-            Food food = collision.gameObject.GetComponent<Food>();
-            food.gameObject.SetActive(false);
-            
-            int count = 1;
-            
-            if (food != null)
-            {
-                count = food.lengthChangeAmt;
-            }
-            
-            RemoveBodySegment(count);
-        }
+        
+        speedBoostCoroutine = StartCoroutine(SpeedBoostCoroutine(speedMultiplier, duration));
     }
     
+    private IEnumerator ShieldCoroutine(float duration)
+    {
+        isShieldActive = true;
+        yield return new WaitForSeconds(duration);
+        isShieldActive = false;
+    }
     
+    private IEnumerator SpeedBoostCoroutine(float speedMultiplier, float duration)
+    {
+        isSpeedBoosted = true;
+        currSnakeSpeed *= speedMultiplier;
+        
+        yield return new WaitForSeconds(duration);
+
+        currSnakeSpeed = InitSnakeSpeed;
+        isSpeedBoosted = false;
+    }
 }

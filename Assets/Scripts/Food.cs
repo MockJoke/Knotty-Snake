@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class Food : MonoBehaviour, ISpawnable
+public class Food : MonoBehaviour, ISpawnable, ICollectible
 {
     public enum FoodType
     {
@@ -11,8 +11,10 @@ public class Food : MonoBehaviour, ISpawnable
         MassBurner
     }
 
-    public FoodType foodType;
+    [SerializeField] private FoodType foodType;
+    
     [Range(1, 10)] public int lengthChangeAmt;
+    
     [SerializeField, Range(1, 30)] private float lifeTime;
     public float LifeTime => lifeTime;
     
@@ -23,5 +25,20 @@ public class Food : MonoBehaviour, ISpawnable
     {
         if (objCollider == null)
             objCollider = GetComponent<Collider2D>();
+    }
+    
+    public void OnCollect(SnakeController snake)
+    {
+        switch (foodType)
+        {
+            case FoodType.MassGainer:
+                snake.IncreaseLength(lengthChangeAmt);
+                break;
+            case FoodType.MassBurner:
+                snake.DecreaseLength(lengthChangeAmt);
+                break;
+        }
+        
+        this.gameObject.SetActive(false);
     }
 }

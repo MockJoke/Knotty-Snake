@@ -145,4 +145,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   powerUpType: 1
   lifeTime: 10
+  effectDuration: 1
   objCollider: {fileID: 402471408531978713}
+  scoreBoostAmount: 50
+  speedMultiplier: 1.5

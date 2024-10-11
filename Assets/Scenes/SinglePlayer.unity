@@ -415,6 +415,7 @@ MonoBehaviour:
   BodySegment: {fileID: 804948377121307165, guid: e46e19e94a5d6f447861d4665edbb074, type: 3}
   SnakeHead: {fileID: 141015832}
   InitialSnakeSize: 3
+  InitSnakeSpeed: 10
 --- !u!50 &141015836
 Rigidbody2D:
   serializedVersion: 4

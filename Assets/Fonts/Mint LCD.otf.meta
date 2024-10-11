@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b11b9cc951b9a434a85f7b004edd0fe8
+guid: 50e2cc3dfa08f1b4a990f33afdc6dca0
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - PixulBrush
+  - Mint LCD
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

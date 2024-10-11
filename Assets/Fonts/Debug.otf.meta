@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: ad0bc2c6ecadea74ea28f12dc5db903e
+guid: 55cc462d0746bdf4e9ed34f576cdf68b
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - PixulBrush-Mono
+  - Debug or smth
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

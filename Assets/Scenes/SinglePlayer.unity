@@ -411,10 +411,10 @@ MonoBehaviour:
   playerID: 0
   lifeStatus: 0
   WrappedArea: {fileID: 39294408}
-  InitialSnakeSize: 3
-  snakeBodyContainer: {fileID: 1273939166}
-  bodySegment: {fileID: 804948377121307165, guid: e46e19e94a5d6f447861d4665edbb074, type: 3}
+  SnakeBodyContainer: {fileID: 1273939166}
+  BodySegment: {fileID: 804948377121307165, guid: e46e19e94a5d6f447861d4665edbb074, type: 3}
   SnakeHead: {fileID: 141015832}
+  InitialSnakeSize: 3
 --- !u!50 &141015836
 Rigidbody2D:
   serializedVersion: 4
@@ -736,7 +736,7 @@ MonoBehaviour:
   - {fileID: 5207124912728435148, guid: 1aa9281a7b90b784f87cc7c2edc657cd, type: 3}
   - {fileID: 3653507580451742728, guid: 38169ef08797c2541a064a481a027a70, type: 3}
   - {fileID: 9178739011531802762, guid: 634d2fa5fe976bf4bb3278da15fff0ad, type: 3}
-  spawnRate: 5
+  spawnRate: 10
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0

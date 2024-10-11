@@ -29,7 +29,7 @@ public class ItemSpawner<T> where T : MonoBehaviour, ISpawnable
     {
         for (int i = 0; i < itemPrefabs.Count; i++)
         {
-            T newItem = GameObject.Instantiate(itemPrefabs[i]);
+            T newItem = GameObject.Instantiate(itemPrefabs[i], parentTransform, true);
             newItem.gameObject.SetActive(false);
             itemPool.Enqueue(newItem);
         }
@@ -52,8 +52,8 @@ public class ItemSpawner<T> where T : MonoBehaviour, ISpawnable
     private void SpawnItem()
     {
         T newItem = GetPooledItem();
-        newItem.transform.SetParent(parentTransform);
         
+        newItem.transform.SetParent(parentTransform);
         newItem.gameObject.SetActive(true);
         
         Vector3 spawnPosition = GetValidSpawnPosition(newItem.Collider);
@@ -87,7 +87,7 @@ public class ItemSpawner<T> where T : MonoBehaviour, ISpawnable
         {
             if (!usedIndexes.Contains(i))
             {
-                T newItem = GameObject.Instantiate(itemPrefabs[i]);
+                T newItem = GameObject.Instantiate(itemPrefabs[i], parentTransform, true);
                 newItem.gameObject.SetActive(false);
                 itemPool.Enqueue(newItem);
                 usedIndexes.Add(i);
@@ -98,7 +98,7 @@ public class ItemSpawner<T> where T : MonoBehaviour, ISpawnable
         while (itemPool.Count < itemPrefabs.Count * 2) // You can adjust the multiplier for pool size
         {
             int randomIndex = Random.Range(0, itemPrefabs.Count);
-            T newItem = GameObject.Instantiate(itemPrefabs[randomIndex]);
+            T newItem = GameObject.Instantiate(itemPrefabs[randomIndex], parentTransform, true);
             newItem.gameObject.SetActive(false);
             itemPool.Enqueue(newItem);
         }

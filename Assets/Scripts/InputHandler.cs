@@ -27,7 +27,7 @@ public class InputHandler : MonoBehaviour
 
     void FixedUpdate()
     {
-        switch(playerID)
+        switch (playerID)
         {
             case PlayerID.player1:
                 player[0].Movement(); 

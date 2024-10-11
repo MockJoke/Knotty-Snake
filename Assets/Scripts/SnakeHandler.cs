@@ -16,35 +16,32 @@ public enum PlayerID
 
 public class SnakeHandler : MonoBehaviour
 {
-    private Vector2Int moveDirection;
-    private Vector2Int playerPosition; 
-    
     public PlayerID playerID;
     public LifeStatus lifeStatus;
 
     [SerializeField] private BoxCollider2D WrappedArea; 
-
-    // [Tooltip("Amount of body segments by which snake size will increase/decrease on consuming food")]
-    // [Range(1, 3)]  public int segmentCnt; 
+    [SerializeField] private GameObject SnakeBodyContainer; 
+    [SerializeField] private Transform BodySegment;           // prefab 
+    [SerializeField] private Transform SnakeHead; 
+    
     [Tooltip("Initial snake body size")] [Range(0,5)] public int InitialSnakeSize = 1;          
-
-    private List<Vector2Int> playerPositionList;     //list of positions where the snake has been
+    
     private List<Transform> bodySegmentList;
-    [SerializeField] private GameObject snakeBodyContainer; 
-    public Transform bodySegment;           // prefab 
-    [SerializeField] public Transform SnakeHead; 
-
+    
+    private Vector2Int moveDirection;
+    private Vector2Int playerPosition;
+    
     private void Start()
     {
-        bodySegmentList = new List<Transform>();        //initializing the list
-        initializeSnakeBody(); 
+        bodySegmentList = new List<Transform>();
+        InitializeSnakeBody(); 
         
-        moveDirection = Vector2Int.right;           // initiating the player direction 
+        moveDirection = Vector2Int.right;           // Initiating the player direction 
 
         lifeStatus = LifeStatus.Alive; 
     }
 
-    private void initializeSnakeBody()
+    private void InitializeSnakeBody()
     {
         for (int i = 1; i < bodySegmentList.Count; i++)
         {
@@ -56,9 +53,9 @@ public class SnakeHandler : MonoBehaviour
 
         for (int i = 1; i < InitialSnakeSize; i++)
         {
-            Transform segment = Instantiate(bodySegment);
+            Transform segment = Instantiate(BodySegment);
             bodySegmentList.Add(segment);
-            segment.transform.SetParent(snakeBodyContainer.transform);
+            segment.transform.SetParent(SnakeBodyContainer.transform);
         }
 
         SnakeHead.transform.position = Vector3.zero;
@@ -136,9 +133,9 @@ public class SnakeHandler : MonoBehaviour
 
     private void AddBodySegment(int count)
     {
-        for(int i=1; i < count; i++)
+        for (int i = 1; i <= count; i++)
         {
-            Transform segment = Instantiate(bodySegment, snakeBodyContainer.transform, true);
+            Transform segment = Instantiate(BodySegment, SnakeBodyContainer.transform, true);
             segment.position = bodySegmentList[^1].position;
             bodySegmentList.Add(segment);
         }
@@ -146,24 +143,11 @@ public class SnakeHandler : MonoBehaviour
     
     private void RemoveBodySegment(int count)
     {
-        for (int i = 1; i < count; i++)
+        for (int i = 1; i <= count; i++)
         {
             Destroy(bodySegmentList[^1].gameObject);
             bodySegmentList.RemoveAt(bodySegmentList.Count - 1);
         }            
-    }
-    
-    public Vector2Int GetPlayerPosition()
-    {
-        return playerPosition; 
-    }
-
-    public List<Vector2Int> GetPlayerPositionList()
-    {
-        playerPositionList = new List<Vector2Int>() { playerPosition };
-        playerPositionList.Add(playerPosition); 
-       
-        return playerPositionList;
     }
 
     public void OnTriggerEnter2D(Collider2D collision)
@@ -171,7 +155,8 @@ public class SnakeHandler : MonoBehaviour
         if (collision.gameObject.CompareTag($"MassGainer"))
         {
             Food food = collision.gameObject.GetComponent<Food>();
-
+            food.gameObject.SetActive(false);
+            
             int count = 1;
             
             if (food != null)
@@ -181,5 +166,21 @@ public class SnakeHandler : MonoBehaviour
             
             AddBodySegment(count); 
         }
+        else if (collision.gameObject.CompareTag($"MassBurner"))
+        {
+            Food food = collision.gameObject.GetComponent<Food>();
+            food.gameObject.SetActive(false);
+            
+            int count = 1;
+            
+            if (food != null)
+            {
+                count = food.lengthChangeAmt;
+            }
+            
+            RemoveBodySegment(count);
+        }
     }
+    
+    
 }

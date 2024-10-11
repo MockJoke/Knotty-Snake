@@ -12,7 +12,6 @@ public class InputHandler : MonoBehaviour
     void Start()
     {
         player = FindObjectsOfType<SnakeController>();
-        // Debug.Log(player.Length);
     }
     
     void Update()

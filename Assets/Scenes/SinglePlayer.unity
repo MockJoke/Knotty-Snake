@@ -132,7 +132,7 @@ GameObject:
   m_Component:
   - component: {fileID: 22975197}
   - component: {fileID: 22975198}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SpawningArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -209,7 +209,7 @@ GameObject:
   m_Component:
   - component: {fileID: 39294407}
   - component: {fileID: 39294408}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: WrappedArea
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -322,7 +322,7 @@ GameObject:
   - component: {fileID: 141015837}
   - component: {fileID: 141015836}
   - component: {fileID: 141015835}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SnakeHead
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -529,7 +529,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 327228079}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Boundary
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -613,7 +613,7 @@ GameObject:
   m_Component:
   - component: {fileID: 375453491}
   - component: {fileID: 375453492}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Wall_U
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1260,7 +1260,7 @@ GameObject:
   m_Component:
   - component: {fileID: 984555929}
   - component: {fileID: 984555930}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Wall_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1446,9 +1446,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1273939167}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Snake
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1563,7 +1563,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1789613956}
   - component: {fileID: 1789613957}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Wall_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1647,7 +1647,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1849372242}
   - component: {fileID: 1849372243}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Wall_D
   m_TagString: Untagged
   m_Icon: {fileID: 0}

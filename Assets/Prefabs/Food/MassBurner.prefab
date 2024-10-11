@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 901975999228762417}
   - component: {fileID: 7620749744763900647}
   - component: {fileID: 1292665848901355217}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: MassBurner
   m_TagString: MassBurner
   m_Icon: {fileID: 0}

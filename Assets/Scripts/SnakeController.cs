@@ -25,7 +25,7 @@ public class SnakeController : MonoBehaviour
     [SerializeField] private GameObject SnakeBodyContainer; 
     [SerializeField] private Transform BodySegment;           // prefab 
     [SerializeField] private Transform SnakeHead; 
-    [Tooltip("Initial snake body size")] [Range(0,5)] public int InitialSnakeSize = 1;          
+    [Tooltip("Initial snake body size")] [Range(0,5)] public int InitSnakeSize = 3;          
     
     [Header("Movement Fields")]
     [Range(1, 20)] public float InitSnakeSpeed = 5f;
@@ -67,7 +67,7 @@ public class SnakeController : MonoBehaviour
         bodySegmentList.Clear();
         bodySegmentList.Add(SnakeHead.transform);
 
-        for (int i = 1; i < InitialSnakeSize; i++)
+        for (int i = 1; i < InitSnakeSize; i++)
         {
             Transform segment = Instantiate(BodySegment, SnakeBodyContainer.transform, true);
             bodySegmentList.Add(segment);
@@ -159,6 +159,12 @@ public class SnakeController : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision.transform != SnakeHead && bodySegmentList.Contains(collision.transform))
+        {
+            lifeStatus = LifeStatus.Dead;
+            Debug.Log($"{playerID} died by hitting its own body");
+        }
+        
         ICollectible collectible = collision.GetComponent<ICollectible>();
         
         if (collectible != null)

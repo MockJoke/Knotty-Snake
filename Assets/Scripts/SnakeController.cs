@@ -98,6 +98,8 @@ public class SnakeController : MonoBehaviour
                 segment.SetColor(PlayerData.Color.BodyColor);
             }
             
+            segment.SetPlayerID(PlayerData.PlayerID);
+            
             segments.Add(segment);
         }
         

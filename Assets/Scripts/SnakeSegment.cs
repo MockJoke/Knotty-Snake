@@ -1,12 +1,11 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SnakeSegment : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer sprite;
 
+    public int PlayerID { get; private set;  }
+        
     protected virtual void Awake()
     {
         if (!sprite)
@@ -16,5 +15,10 @@ public class SnakeSegment : MonoBehaviour
     public void SetColor(Color color)
     {
         sprite.color = color;
+    }
+
+    public void SetPlayerID(int id)
+    {
+        PlayerID = id;
     }
 }

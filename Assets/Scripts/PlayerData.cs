@@ -17,6 +17,7 @@ public class PlayerData
         IsAlive = true;
         InputKeyBinding = keys;
         Color = color;
+        
         SnakeController = snakeController;
         SnakeController.SetPlayerData(this);
     }

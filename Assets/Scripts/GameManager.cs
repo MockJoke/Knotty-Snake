@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     private List<Vector3> playerStartPositions = new List<Vector3>();
     private List<PlayerData> players = new List<PlayerData>();
 
-    private void Awake()
+    void Awake()
     {
         if (Instance == null)
         {

@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SnakeHeadSegment : SnakeSegment
@@ -28,7 +25,11 @@ public class SnakeHeadSegment : SnakeSegment
 
         if (bodySegment)
         {
-            snakeController.OnSelfCollision();
+            if (bodySegment.PlayerID == this.PlayerID)
+            {
+                Debug.Log(bodySegment);
+                snakeController.OnSelfCollision();
+            }
         }
     }
 }

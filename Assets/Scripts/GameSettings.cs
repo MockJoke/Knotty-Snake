@@ -14,7 +14,7 @@ public class GameSettings : MonoBehaviour
 
     public GameMode SelectedGameMode { get; private set; }
 
-    private void Awake()
+    void Awake()
     {
         if (Instance == null)
         {

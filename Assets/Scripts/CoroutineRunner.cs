@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// A class to use Unity's Coroutines for Non-MonoBehaviour classes
+/// A utility class to use Unity's Coroutines for Non-MonoBehaviour classes
 /// </summary>
 public class CoroutineRunner : MonoBehaviour
 {

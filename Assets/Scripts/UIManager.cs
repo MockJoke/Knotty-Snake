@@ -6,16 +6,15 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    private static UIManager instance;
-    public static UIManager Instance => instance;
+    public static UIManager Instance { get; private set; }
 
     [SerializeField] private TextMeshProUGUI ScoreText;
     
     void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
         }
         else
         {

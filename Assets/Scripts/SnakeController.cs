@@ -2,29 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum LifeStatus
-{
-    Alive,
-    Dead
-}
-
-public enum PlayerID
-{
-    player1, 
-    player2
-}
-
 public class SnakeController : MonoBehaviour
 {
-    public PlayerID playerID;
-    public LifeStatus lifeStatus;
-    
-    [SerializeField] private BoxCollider2D WrappedArea; 
+    public PlayerData PlayerData { get; private set; }
     
     [Header("Body Parts")]
-    [SerializeField] private GameObject SnakeBodyContainer; 
-    [SerializeField] private Transform BodySegment;           // prefab 
-    [SerializeField] private Transform SnakeHead; 
+    [SerializeField] private SnakeSegment HeadSegment;
+    [SerializeField] private SnakeSegment BodySegment;
     [Tooltip("Initial snake body size")] [Range(0,5)] public int InitSnakeSize = 3;          
     
     [Header("Movement Fields")]
@@ -39,73 +23,121 @@ public class SnakeController : MonoBehaviour
     
     private int score = 0;
     
-    private List<Transform> bodySegmentList;
+    private List<SnakeSegment> segments;
     
     private Vector2Int moveDirection;
     private Vector2Int playerPosition;
-    
-    void Start()
-    {
-        bodySegmentList = new List<Transform>();
-        InitializeSnakeBody(); 
-        
-        moveDirection = Vector2Int.right;           // Initiating the player direction 
 
-        lifeStatus = LifeStatus.Alive; 
+    #region MonoBehaviour Methods
+
+    void Update()
+    {
+        if (PlayerData.IsAlive)
+        {
+            SetInputDirection();
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if (PlayerData.IsAlive)
+        {
+            Move();
+        }
+    }
+
+    #endregion
+
+    #region Setup related Methods
+
+    public void Initialize()
+    {
+        segments = new List<SnakeSegment>();
+        InitializeSnakeBody();
+
+        switch (PlayerData.PlayerID)
+        {
+            case 1:
+                moveDirection = Vector2Int.right;
+                break;
+            case 2:
+                moveDirection = Vector2Int.left;
+                break;
+        }
         
         currSnakeSpeed = InitSnakeSpeed;
         moveTimer = 1f / currSnakeSpeed;
     }
 
-    private void InitializeSnakeBody()
+    public void SetPlayerData(PlayerData data)
     {
-        for (int i = 1; i < bodySegmentList.Count; i++)
-        {
-            Destroy(bodySegmentList[i].gameObject);
-        }
-
-        bodySegmentList.Clear();
-        bodySegmentList.Add(SnakeHead.transform);
-
-        for (int i = 1; i < InitSnakeSize; i++)
-        {
-            Transform segment = Instantiate(BodySegment, SnakeBodyContainer.transform, true);
-            bodySegmentList.Add(segment);
-        }
-
-        SnakeHead.transform.position = Vector3.zero;
+        PlayerData = data;
     }
 
-    public void InputDirection()
+    private void InitializeSnakeBody()
+    {
+        for (int i = 0; i < segments.Count; i++)
+        {
+            Destroy(segments[i].gameObject);
+        }
+
+        segments.Clear();
+
+        for (int i = 0; i < InitSnakeSize; i++)
+        {
+            SnakeSegment segment;
+
+            if (i == 0)
+            {
+                segment = Instantiate(HeadSegment.transform, this.transform, true).GetComponent<SnakeSegment>();
+                segment.SetColor(PlayerData.Color.HeadColor);
+            }
+            else
+            {
+                segment = Instantiate(BodySegment.transform, this.transform, true).GetComponent<SnakeSegment>();
+                segment.SetColor(PlayerData.Color.BodyColor);
+            }
+            
+            segments.Add(segment);
+        }
+        
+        segments[0].transform.position = Vector3.zero;
+    }
+
+    #endregion
+
+    #region Movement
+    
+    private void SetInputDirection()
     {
         // Only allow turning up or down while moving in the x-dir
-        if (this.moveDirection.x != 0f)
+        if (moveDirection.x != 0f)
         {
-            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+            if (Input.GetKeyDown(PlayerData.InputKeyBinding.UpKey))
             {
                 moveDirection = Vector2Int.up;
             }
-            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+            else if (Input.GetKeyDown(PlayerData.InputKeyBinding.DownKey))
             {
                 moveDirection = Vector2Int.down;
             }
         }
 
         // Only allow turning left or right while moving in the y-dir
-        else if (this.moveDirection.y != 0f)
+        else if (moveDirection.y != 0f)
         {
-            if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                moveDirection = Vector2Int.right;
-            }
-            else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+            if (Input.GetKeyDown(PlayerData.InputKeyBinding.LeftKey))
             {
                 moveDirection = Vector2Int.left;
+            }
+            else if (Input.GetKeyDown(PlayerData.InputKeyBinding.RightKey))
+            {
+                moveDirection = Vector2Int.right;
             }
         }
     }
     
-    public void Move()
+    private void Move()
     {
         moveTimer -= Time.fixedDeltaTime;
 
@@ -120,78 +152,83 @@ public class SnakeController : MonoBehaviour
 
     private void UpdateMovement()
     {
-        // Make the snake body move forward, each segment is following the one in front of it 
-        for (int i = bodySegmentList.Count - 1; i > 0; i--)
-        {
-            bodySegmentList[i].position = bodySegmentList[i - 1].position;
-        }
-            
+        Vector3 previousPosition = segments[0].transform.position;
+        
         // Updating the head position
-        playerPosition.x = Mathf.RoundToInt(this.transform.position.x) + this.moveDirection.x;
-        playerPosition.y = Mathf.RoundToInt(this.transform.position.y) + this.moveDirection.y;
-        this.transform.position = new Vector2(playerPosition.x, playerPosition.y);
+        playerPosition.x = Mathf.RoundToInt(segments[0].transform.position.x) + this.moveDirection.x;
+        playerPosition.y = Mathf.RoundToInt(segments[0].transform.position.y) + this.moveDirection.y;
+        segments[0].transform.position = new Vector2(playerPosition.x, playerPosition.y);
+        
+        // Make the snake body move forward, each segment is following the one in front of it 
+        for (int i = 1; i < segments.Count; i++)
+        {
+            Vector3 currentSegmentPosition = segments[i].transform.position;
+            segments[i].transform.position = previousPosition;
+            previousPosition = currentSegmentPosition;
+        }
     }
 
     private void ScreenWrap()
     {
-        Bounds bounds = this.WrappedArea.bounds;
+        Bounds bounds = GameManager.Instance.GetWrappedAreaBounds();
 
-        //screen wrapping in x dir
-        if(transform.position.x >= bounds.max.x)
+        // screen wrapping in x dir
+        if(segments[0].transform.position.x >= bounds.max.x)
         {
-            this.transform.position = new Vector2(bounds.min.x, this.transform.position.y);  
+            segments[0].transform.position = new Vector2(bounds.min.x, segments[0].transform.position.y);  
         }
         else if (transform.position.x <= bounds.min.x)
         {
-            this.transform.position = new Vector2(bounds.max.x, this.transform.position.y);         
+            segments[0].transform.position = new Vector2(bounds.max.x, segments[0].transform.position.y);         
         }
 
-        //screen wrapping in y dir
-        if (transform.position.y >= bounds.max.y)
+        // screen wrapping in y dir
+        if (segments[0].transform.position.y >= bounds.max.y)
         {
-            this.transform.position = new Vector2(this.transform.position.x, bounds.min.y);           
+            segments[0].transform.position = new Vector2(segments[0].transform.position.x, bounds.min.y);           
         }
         else if (transform.position.y <= bounds.min.y)
         {
-            this.transform.position = new Vector2(this.transform.position.x, bounds.max.y);          
-        }     
+            segments[0].transform.position = new Vector2(segments[0].transform.position.x, bounds.max.y);          
+        }
     }
 
-    public void OnTriggerEnter2D(Collider2D collision)
+    #endregion
+
+    #region Food & Powerups
+
+    public void OnItemCollection(ICollectible item)
     {
-        if (collision.transform != SnakeHead && bodySegmentList.Contains(collision.transform))
-        {
-            lifeStatus = LifeStatus.Dead;
-            Debug.Log($"{playerID} died by hitting its own body");
-        }
-        
-        ICollectible collectible = collision.GetComponent<ICollectible>();
-        
-        if (collectible != null)
-        {
-            collectible.OnCollect(this);
-        }
+        item.OnCollect(this);
     }
 
+    public void OnSelfCollision()
+    {
+        if (!isShieldActive)
+        {
+            PlayerData.MarkAsDead();
+        }
+    }
+    
     public void IncreaseLength(int amount)
     {
-        for (int i = 1; i <= amount; i++)
+        for (int i = 0; i < amount; i++)
         {
-            Transform segment = Instantiate(BodySegment, SnakeBodyContainer.transform, true);
-            segment.position = bodySegmentList[^1].position;
-            bodySegmentList.Add(segment);
+            SnakeSegment segment = Instantiate(BodySegment.transform, this.transform, true).GetComponent<SnakeSegment>();
+            segment.transform.position = segments[segments.Count - 1].transform.position;
+            segments.Add(segment);
         }
     }
 
     public void DecreaseLength(int amount)
     {
-        for (int i = 1; i <= amount; i++)
+        for (int i = 0; i < amount; i++)
         {
-            Destroy(bodySegmentList[^1].gameObject);
-            bodySegmentList.RemoveAt(bodySegmentList.Count - 1);
+            Destroy(segments[segments.Count - 1].gameObject);
+            segments.RemoveAt(segments.Count - 1);
         }
     }
-
+    
     public void ActivateShield(float duration)
     {
         StartCoroutine(ShieldCoroutine(duration));
@@ -230,4 +267,6 @@ public class SnakeController : MonoBehaviour
         currSnakeSpeed = InitSnakeSpeed;
         isSpeedBoosted = false;
     }
+
+    #endregion
 }

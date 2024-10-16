@@ -17,12 +17,15 @@ public class SnakeController : MonoBehaviour
     
     private float currSnakeSpeed;
     private float moveTimer;
-    private bool isSpeedBoosted = false;
-    private Coroutine speedBoostCoroutine;
-
     private bool isShieldActive = false;
+    private bool isSpeedBoosted = false;
+    private bool isScoreBoosted = false;
+    
+    private Coroutine speedBoostCoroutine;
+    private Coroutine scoreBoostCoroutine;
     
     private int score = 0;
+    private int currScoreMultiplier = 1;
     
     private List<SnakeSegment> segments = new List<SnakeSegment>();
     
@@ -303,7 +306,7 @@ public class SnakeController : MonoBehaviour
                 ActivateShield(powerUp.EffectDuration);
                 break;
             case PowerUp.PowerUpType.ScoreBoost:
-                BoostScore(powerUp.ScoreBoostAmount);
+                BoostScore(powerUp.ScoreMultiplier, powerUp.EffectDuration);
                 break;
             case PowerUp.PowerUpType.SpeedUp:
                 SpeedUp(powerUp.SpeedMultiplier, powerUp.EffectDuration);
@@ -319,6 +322,7 @@ public class SnakeController : MonoBehaviour
         {
             case Food.FoodType.MassGainer:
                 IncreaseLength(food.LengthChangeAmount);
+                IncreaseScore(food.ScoreGainAmount);
                 break;
             case Food.FoodType.MassBurner:
                 DecreaseLength(food.LengthChangeAmount);
@@ -334,9 +338,15 @@ public class SnakeController : MonoBehaviour
         {
             SnakeSegment segment = Instantiate(BodySegment.transform, this.transform, true).GetComponent<SnakeSegment>();
             segment.SetPosition(segments[segments.Count - 1].GetPosition());
-            segment.SetColor(playerData.Color.HeadColor);
+            segment.SetColor(playerData.Color.BodyColor);
             segments.Add(segment);
         }
+    }
+
+    private void IncreaseScore(int amount)
+    {
+        score += amount * currScoreMultiplier;
+        UIManager.Instance.DisplayScore(score);
     }
 
     public void DecreaseLength(int amount)
@@ -353,10 +363,14 @@ public class SnakeController : MonoBehaviour
         StartCoroutine(ShieldCoroutine(duration));
     }
 
-    public void BoostScore(int amount)
+    public void BoostScore(int scoreMultiplier, float duration)
     {
-        score += amount;
-        UIManager.Instance.DisplayScore(score);
+        if (isScoreBoosted && scoreBoostCoroutine != null)
+        {
+            StopCoroutine(scoreBoostCoroutine);
+        }
+        
+        scoreBoostCoroutine = StartCoroutine(ScoreBoostCoroutine(scoreMultiplier, duration));
     }
 
     public void SpeedUp(float speedMultiplier, float duration)
@@ -385,6 +399,17 @@ public class SnakeController : MonoBehaviour
 
         currSnakeSpeed = InitSnakeSpeed;
         isSpeedBoosted = false;
+    }
+    
+    private IEnumerator ScoreBoostCoroutine(int scoreMultiplier, float duration)
+    {
+        isScoreBoosted = true;
+        currScoreMultiplier *= scoreMultiplier;
+        
+        yield return new WaitForSeconds(duration);
+
+        currScoreMultiplier = 1;
+        isScoreBoosted = false;
     }
 
     #endregion

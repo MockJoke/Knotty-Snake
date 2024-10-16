@@ -14,11 +14,14 @@ public class Food : MonoBehaviour, ISpawnable, ICollectible
     [SerializeField] private FoodType foodType;
     public FoodType Type => foodType;
     
-    [SerializeField, Range(1, 10)] private int lengthChangeAmt;
+    [SerializeField, Range(1, 10)] private int lengthChangeAmt = 1;
     public int LengthChangeAmount => lengthChangeAmt;
     
-    [SerializeField, Range(1, 30)] private float lifeTime;
+    [SerializeField, Range(1, 30)] private float lifeTime = 10;
     public float LifeTime => lifeTime;
+
+    [SerializeField] private int scoreGainAmt = 10;
+    public int ScoreGainAmount => scoreGainAmt;
     
     private Vector2Int Position;
     

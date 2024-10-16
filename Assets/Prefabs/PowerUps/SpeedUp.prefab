@@ -146,5 +146,5 @@ MonoBehaviour:
   powerUpType: 2
   lifeTime: 10
   effectDuration: 20
-  scoreBoostAmount: 50
+  scoreMultiplier: 2
   speedMultiplier: 2

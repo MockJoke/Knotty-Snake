@@ -146,3 +146,4 @@ MonoBehaviour:
   foodType: 0
   lengthChangeAmt: 1
   lifeTime: 15
+  scoreGainAmt: 10

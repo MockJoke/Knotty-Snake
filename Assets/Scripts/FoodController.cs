@@ -8,7 +8,6 @@ public class FoodController : MonoBehaviour
     [SerializeField] private Collider2D SpawningArea;
     [SerializeField] private List<Food> FoodObjects;
     [SerializeField] private float spawnRate;
-    // public float SpawnRate => spawnRate;
     
     private ItemSpawner<Food> itemSpawner;
 

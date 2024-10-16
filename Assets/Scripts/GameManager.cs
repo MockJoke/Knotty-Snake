@@ -133,8 +133,6 @@ public class GameManager : MonoBehaviour
     {
         deadPlayerData.MarkAsDead();
         alivePlayers.Remove(deadPlayerData);
-        
-        // CheckForWinCondition();
     }
 
     public void CheckForGameOverCondition()

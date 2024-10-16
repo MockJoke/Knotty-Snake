@@ -21,7 +21,6 @@ public class PlayerData
         InitPos = pos;
         
         SnakeController = snakeController;
-        // SnakeController.SetPlayerData(this);
     }
 
     public void MarkAsDead()

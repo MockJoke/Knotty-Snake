@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class SnakeController : MonoBehaviour
 {
-    public PlayerData PlayerData { get; private set; }
+    public PlayerData playerData { get; private set; }
     
     [Header("Body Parts")]
     [SerializeField] private SnakeSegment HeadSegment;
@@ -44,9 +44,9 @@ public class SnakeController : MonoBehaviour
 
     void Update()
     {
-        if (PlayerData.IsAlive)
+        if (playerData.IsAlive)
         {
-            SetInputDirection();
+            SetInputMoveDirection();
             HandleMovement();
             CheckCollisions();
         }
@@ -56,15 +56,14 @@ public class SnakeController : MonoBehaviour
 
     #region Init Setup Methods
 
-    public void Initialize(PlayerData playerData, List<SnakeController> others = null)
+    public void Initialize(PlayerData data, List<SnakeController> others = null)
     {
-        SetPlayerData(playerData);
-
+        playerData = data;
         otherPlayers = others;
         
         segments = new List<SnakeSegment>();
 
-        switch (PlayerData.PlayerID)
+        switch (playerData.PlayerID)
         {
             case 1:
                 moveDirection = Vector2Int.right;
@@ -80,11 +79,6 @@ public class SnakeController : MonoBehaviour
         moveTimer = 1f / currSnakeSpeed;
     }
 
-    public void SetPlayerData(PlayerData data)
-    {
-        PlayerData = data;
-    }
-
     private void InitializeSnakeBody()
     {
         for (int i = 0; i < segments.Count; i++)
@@ -98,15 +92,14 @@ public class SnakeController : MonoBehaviour
         {
             SnakeSegment segment;
             
-            // Head Segment
-            if (i == 0)
+            if (i == 0)     // Head Segment
             {
                 segment = Instantiate(HeadSegment.transform, this.transform, true).GetComponent<SnakeSegment>();
                 
-                segment.SetPosition(PlayerData.InitPos);
+                segment.SetPosition(playerData.InitPos);
                 playerPosition = segment.GetPosition();
                 
-                segment.SetColor(PlayerData.Color.HeadColor);
+                segment.SetColor(playerData.Color.HeadColor);
             }
             else
             {
@@ -115,10 +108,8 @@ public class SnakeController : MonoBehaviour
                 // Set init pos for body segments so that at the start they don't trigger self collisions
                 segment.SetPosition(new Vector2Int(playerPosition.x - moveDirection.x, playerPosition.y - moveDirection.y));
                 
-                segment.SetColor(PlayerData.Color.BodyColor);
+                segment.SetColor(playerData.Color.BodyColor);
             }
-            
-            segment.SetPlayerID(PlayerData.PlayerID);
             
             segments.Add(segment);
         }
@@ -128,16 +119,16 @@ public class SnakeController : MonoBehaviour
 
     #region Movement
     
-    private void SetInputDirection()
+    private void SetInputMoveDirection()
     {
         // Only allow turning up or down while moving in the x-dir
         if (moveDirection.x != 0f)
         {
-            if (Input.GetKeyDown(PlayerData.InputKeyBinding.UpKey))
+            if (Input.GetKeyDown(playerData.InputKeyBinding.UpKey))
             {
                 moveDirection = Vector2Int.up;
             }
-            else if (Input.GetKeyDown(PlayerData.InputKeyBinding.DownKey))
+            else if (Input.GetKeyDown(playerData.InputKeyBinding.DownKey))
             {
                 moveDirection = Vector2Int.down;
             }
@@ -146,11 +137,11 @@ public class SnakeController : MonoBehaviour
         // Only allow turning left or right while moving in the y-dir
         else if (moveDirection.y != 0f)
         {
-            if (Input.GetKeyDown(PlayerData.InputKeyBinding.LeftKey))
+            if (Input.GetKeyDown(playerData.InputKeyBinding.LeftKey))
             {
                 moveDirection = Vector2Int.left;
             }
-            else if (Input.GetKeyDown(PlayerData.InputKeyBinding.RightKey))
+            else if (Input.GetKeyDown(playerData.InputKeyBinding.RightKey))
             {
                 moveDirection = Vector2Int.right;
             }
@@ -174,12 +165,12 @@ public class SnakeController : MonoBehaviour
     {
         Vector2Int prevPos = segments[0].GetPosition();
         
-        // Updating the head position
+        // Update the head position
         playerPosition.x = segments[0].GetPosition().x + moveDirection.x;
         playerPosition.y = segments[0].GetPosition().y + moveDirection.y;
         segments[0].SetPosition(new Vector2Int(playerPosition.x, playerPosition.y));
         
-        // Make the snake body move forward, each segment is following the one in front of it 
+        // Make the snake body move forward, each segment follows the one in front of it 
         for (int i = 1; i < segments.Count; i++)
         {
             Vector2Int currPos = segments[i].GetPosition();
@@ -192,7 +183,6 @@ public class SnakeController : MonoBehaviour
     {
         Bounds bounds = GameManager.Instance.GetWrappedAreaBounds();
         
-        // screen wrapping in x dir
         if(segments[0].GetPosition().x >= bounds.max.x)
         {
             segments[0].SetPosition(new Vector2Int((int)bounds.min.x, segments[0].GetPosition().y));  
@@ -202,7 +192,6 @@ public class SnakeController : MonoBehaviour
             segments[0].SetPosition(new Vector2Int((int)bounds.max.x, segments[0].GetPosition().y));     
         }
         
-        // screen wrapping in y dir
         if (segments[0].GetPosition().y >= bounds.max.y)
         {
             segments[0].SetPosition(new Vector2Int(segments[0].GetPosition().x, (int)bounds.min.y));          
@@ -237,7 +226,7 @@ public class SnakeController : MonoBehaviour
             {
                 if (!isShieldActive)
                 {
-                    PlayerData.MarkAsDead();
+                    playerData.MarkAsDead();
                 }
                 
                 return;
@@ -247,10 +236,9 @@ public class SnakeController : MonoBehaviour
     
     private void CheckForOtherPlayerCollision()
     {
-        // Check if the head of the snake collides with any segment of the other players' snake
         for (int i = 0; i < otherPlayers.Count; i++)
         {
-            if (PlayerData.PlayerID < otherPlayers[i].PlayerData.PlayerID)
+            if (playerData.PlayerID < otherPlayers[i].playerData.PlayerID)
             {
                 for (int j = 0; j < otherPlayers[i].segments.Count; j++)
                 {
@@ -259,18 +247,18 @@ public class SnakeController : MonoBehaviour
                         if (j == 0)     // Head to Head collisions
                         {
                             // For head to head collisions, to avoid the duplicate reporting, only check for one of them based on which one has a lower ID
-                            if (PlayerData.PlayerID < otherPlayers[i].PlayerData.PlayerID)
+                            if (playerData.PlayerID < otherPlayers[i].playerData.PlayerID)
                             {
                                 // If two players' head collides, then both of them dies
-                                GameManager.Instance.OnPlayerDeath(otherPlayers[i].PlayerData);
-                                GameManager.Instance.OnPlayerDeath(this.PlayerData);
+                                GameManager.Instance.OnPlayerDeath(otherPlayers[i].playerData);
+                                GameManager.Instance.OnPlayerDeath(this.playerData);
                                 
                                 GameManager.Instance.CheckForGameOverCondition();
                             }
                         }
                         else            // Head to Body collisions
                         {
-                            GameManager.Instance.OnPlayerDeath(otherPlayers[i].PlayerData);
+                            GameManager.Instance.OnPlayerDeath(otherPlayers[i].playerData);
                             
                             GameManager.Instance.CheckForGameOverCondition();
                         }
@@ -290,7 +278,6 @@ public class SnakeController : MonoBehaviour
             if (foodItems[i].GetPosition() == segments[0].GetPosition())
             {
                 OnFoodCollect(foodItems[i]);
-                // foodItems[i].OnCollect(this);
             }
         }
         
@@ -300,7 +287,6 @@ public class SnakeController : MonoBehaviour
             if (powerUpItems[i].GetPosition() == segments[0].GetPosition())
             {
                 OnPowerUpCollect(powerUpItems[i]);
-                // powerUpItems[i].OnCollect(this);
             }
         }
     }
@@ -341,11 +327,6 @@ public class SnakeController : MonoBehaviour
         
         food.gameObject.SetActive(false);
     }
-
-    // public void OnItemCollection(ICollectible item)
-    // {
-    //     item.OnCollect(this);
-    // }
     
     public void IncreaseLength(int amount)
     {
@@ -353,7 +334,7 @@ public class SnakeController : MonoBehaviour
         {
             SnakeSegment segment = Instantiate(BodySegment.transform, this.transform, true).GetComponent<SnakeSegment>();
             segment.SetPosition(segments[segments.Count - 1].GetPosition());
-            segment.SetColor(PlayerData.Color.HeadColor);
+            segment.SetColor(playerData.Color.HeadColor);
             segments.Add(segment);
         }
     }

@@ -353,6 +353,7 @@ public class SnakeController : MonoBehaviour
         {
             SnakeSegment segment = Instantiate(BodySegment.transform, this.transform, true).GetComponent<SnakeSegment>();
             segment.SetPosition(segments[segments.Count - 1].GetPosition());
+            segment.SetColor(PlayerData.Color.HeadColor);
             segments.Add(segment);
         }
     }

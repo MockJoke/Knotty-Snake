@@ -29,14 +29,15 @@ public class SnakeController : MonoBehaviour
     private Vector2Int moveDirection;
     private Vector2Int playerPosition;
 
+    private FoodController foodController;
+    private PowerUpController powerUpController;
+
     #region MonoBehaviour Methods
 
-    void Update()
+    void Awake()
     {
-        if (PlayerData.IsAlive)
-        {
-            SetInputDirection();
-        }
+        foodController = FindObjectOfType<FoodController>();
+        powerUpController = FindObjectOfType<PowerUpController>();
     }
 
     void Update()
@@ -215,6 +216,8 @@ public class SnakeController : MonoBehaviour
     private void CheckCollisions()
     {
         CheckForSelfCollision();
+        
+        CheckForItemCollision();
     }
 
     private void CheckForSelfCollision()
@@ -232,20 +235,87 @@ public class SnakeController : MonoBehaviour
             }
         }
     }
-    #region Food & Powerups
-
-    public void OnItemCollection(ICollectible item)
+    
+    // private void CheckForOtherPlayerCollision()
+    // {
+    //     if (otherPlayer == null) return;
+    //
+    //     // Check if the head of the snake collides with any segment of the other player's snake
+    //     foreach (var otherPlayerSegment in otherPlayer.segments)
+    //     {
+    //         if (segments[0] == otherPlayerSegment) // Collision detected
+    //         {
+    //             Debug.Log($"Player {PlayerData.PlayerID} collided with Player {otherPlayer.PlayerData.PlayerID}!");
+    //             HandleDeath();
+    //             return;
+    //         }
+    //     }
+    // }
+    
+    private void CheckForItemCollision()
     {
-        item.OnCollect(this);
-    }
-
-    public void OnSelfCollision()
-    {
-        if (!isShieldActive)
+        List<Food> foodItems = foodController.GetItems();
+        for (int i = 0; i < foodItems.Count; i++)
         {
-            PlayerData.MarkAsDead();
+            if (foodItems[i].GetPosition() == segments[0].GetPosition())
+            {
+                OnFoodCollect(foodItems[i]);
+                // foodItems[i].OnCollect(this);
+            }
+        }
+        
+        List<PowerUp> powerUpItems = powerUpController.GetItems();
+        for (int i = 0; i < powerUpItems.Count; i++)
+        {
+            if (powerUpItems[i].GetPosition() == segments[0].GetPosition())
+            {
+                OnPowerUpCollect(powerUpItems[i]);
+                // powerUpItems[i].OnCollect(this);
+            }
         }
     }
+    
+    #endregion
+
+    #region Food & Powerups
+
+    private void OnPowerUpCollect(PowerUp powerUp)
+    {
+        switch (powerUp.Type)
+        {
+            case PowerUp.PowerUpType.Shield:
+                ActivateShield(powerUp.EffectDuration);
+                break;
+            case PowerUp.PowerUpType.ScoreBoost:
+                BoostScore(powerUp.ScoreBoostAmount);
+                break;
+            case PowerUp.PowerUpType.SpeedUp:
+                SpeedUp(powerUp.SpeedMultiplier, powerUp.EffectDuration);
+                break;
+        }
+        
+        powerUp.gameObject.SetActive(false);
+    }
+
+    private void OnFoodCollect(Food food)
+    {
+        switch (food.Type)
+        {
+            case Food.FoodType.MassGainer:
+                IncreaseLength(food.LengthChangeAmount);
+                break;
+            case Food.FoodType.MassBurner:
+                DecreaseLength(food.LengthChangeAmount);
+                break;
+        }
+        
+        food.gameObject.SetActive(false);
+    }
+
+    // public void OnItemCollection(ICollectible item)
+    // {
+    //     item.OnCollect(this);
+    // }
     
     public void IncreaseLength(int amount)
     {

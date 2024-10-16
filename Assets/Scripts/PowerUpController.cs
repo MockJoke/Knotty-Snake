@@ -22,4 +22,9 @@ public class PowerUpController : MonoBehaviour
     {
         itemSpawner.UpdateSpawner();
     }
+    
+    public List<PowerUp> GetItems()
+    {
+        return itemSpawner.GetActiveItems();
+    }
 }

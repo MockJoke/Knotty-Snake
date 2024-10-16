@@ -61,10 +61,34 @@ public class GameManager : MonoBehaviour
         {
             GameObject snakeInstance = Instantiate(snakePrefab.gameObject, playerStartPositions[i], Quaternion.identity);
             PlayerData playerData = new PlayerData(i + 1, InputKeyBindings[i], PlayerColors[i], snakeInstance.GetComponent<SnakeController>());
-            snakeInstance.GetComponent<SnakeController>().Initialize();
+            snakeInstance.GetComponent<SnakeController>().Initialize(playerData);
             
             players.Add(playerData);
         }
+
+        // if (players.Count > 1)
+        // {
+        //     List<SnakeController> otherPlayers = new List<SnakeController>();
+        //     
+        //     for (int i = 0; i < count; i++)
+        //     {
+        //         otherPlayers.Clear();
+        //         
+        //         for (int j = 0; j < players.Count; j++)
+        //         {
+        //             if (i != j)
+        //             {
+        //                 otherPlayers.Add(players[j].SnakeController);
+        //             }    
+        //         }
+        //         
+        //         players[i].SnakeController.Initialize(players[i], otherPlayers);
+        //     }
+        // }
+        // else
+        // {
+        //     players[0].SnakeController.Initialize(players[0]);
+        // }
     }
     
     private void SetPlayerPositions(int count)

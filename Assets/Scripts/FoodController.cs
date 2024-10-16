@@ -23,4 +23,9 @@ public class FoodController : MonoBehaviour
     {
         itemSpawner.UpdateSpawner();
     }
+
+    public List<Food> GetItems()
+    {
+        return itemSpawner.GetActiveItems();
+    }
 }

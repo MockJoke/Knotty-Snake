@@ -17,7 +17,7 @@ public class SnakeSegment : MonoBehaviour
     public void SetPosition(Vector2Int pos)
     {
         Position = pos;
-        transform.position = new Vector3(Position.x, Position.y, 0f);
+        transform.localPosition = new Vector3(Position.x, Position.y, 0f);
     }
     
     public Vector2Int GetPosition()

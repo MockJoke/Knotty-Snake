@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -38,11 +39,13 @@ public class SnakeController : MonoBehaviour
         }
     }
 
-    void FixedUpdate()
+    void Update()
     {
         if (PlayerData.IsAlive)
         {
-            Move();
+            SetInputDirection();
+            HandleMovement();
+            CheckCollisions();
         }
     }
 
@@ -50,10 +53,11 @@ public class SnakeController : MonoBehaviour
 
     #region Setup related Methods
 
-    public void Initialize()
+    public void Initialize(PlayerData playerData, List<SnakeController> otherPlayers = null)
     {
+        SetPlayerData(playerData);
+        
         segments = new List<SnakeSegment>();
-        InitializeSnakeBody();
 
         switch (PlayerData.PlayerID)
         {
@@ -64,6 +68,8 @@ public class SnakeController : MonoBehaviour
                 moveDirection = Vector2Int.left;
                 break;
         }
+        
+        InitializeSnakeBody();
         
         currSnakeSpeed = InitSnakeSpeed;
         moveTimer = 1f / currSnakeSpeed;
@@ -86,15 +92,24 @@ public class SnakeController : MonoBehaviour
         for (int i = 0; i < InitSnakeSize; i++)
         {
             SnakeSegment segment;
-
+            
+            // Head Segment
             if (i == 0)
             {
                 segment = Instantiate(HeadSegment.transform, this.transform, true).GetComponent<SnakeSegment>();
+                
+                segment.SetPosition(Vector2Int.zero);
+                playerPosition = segment.GetPosition();
+                
                 segment.SetColor(PlayerData.Color.HeadColor);
             }
             else
             {
                 segment = Instantiate(BodySegment.transform, this.transform, true).GetComponent<SnakeSegment>();
+                
+                // Set init pos for body segments so that at the start they don't trigger self collisions
+                segment.SetPosition(new Vector2Int(playerPosition.x - moveDirection.x, playerPosition.y - moveDirection.y));
+                
                 segment.SetColor(PlayerData.Color.BodyColor);
             }
             
@@ -102,8 +117,6 @@ public class SnakeController : MonoBehaviour
             
             segments.Add(segment);
         }
-        
-        segments[0].transform.position = Vector3.zero;
     }
 
     #endregion
@@ -139,9 +152,9 @@ public class SnakeController : MonoBehaviour
         }
     }
     
-    private void Move()
+    private void HandleMovement()
     {
-        moveTimer -= Time.fixedDeltaTime;
+        moveTimer -= Time.deltaTime;
 
         if (moveTimer <= 0f)
         {
@@ -154,49 +167,71 @@ public class SnakeController : MonoBehaviour
 
     private void UpdateMovement()
     {
-        Vector3 previousPosition = segments[0].transform.position;
+        Vector2Int prevPos = segments[0].GetPosition();
         
         // Updating the head position
-        playerPosition.x = Mathf.RoundToInt(segments[0].transform.position.x) + this.moveDirection.x;
-        playerPosition.y = Mathf.RoundToInt(segments[0].transform.position.y) + this.moveDirection.y;
-        segments[0].transform.position = new Vector2(playerPosition.x, playerPosition.y);
+        playerPosition.x = segments[0].GetPosition().x + moveDirection.x;
+        playerPosition.y = segments[0].GetPosition().y + moveDirection.y;
+        segments[0].SetPosition(new Vector2Int(playerPosition.x, playerPosition.y));
         
         // Make the snake body move forward, each segment is following the one in front of it 
         for (int i = 1; i < segments.Count; i++)
         {
-            Vector3 currentSegmentPosition = segments[i].transform.position;
-            segments[i].transform.position = previousPosition;
-            previousPosition = currentSegmentPosition;
+            Vector2Int currPos = segments[i].GetPosition();
+            segments[i].SetPosition(prevPos);
+            prevPos = currPos;
         }
     }
 
     private void ScreenWrap()
     {
         Bounds bounds = GameManager.Instance.GetWrappedAreaBounds();
-
+        
         // screen wrapping in x dir
-        if(segments[0].transform.position.x >= bounds.max.x)
+        if(segments[0].GetPosition().x >= bounds.max.x)
         {
-            segments[0].transform.position = new Vector2(bounds.min.x, segments[0].transform.position.y);  
+            segments[0].SetPosition(new Vector2Int((int)bounds.min.x, segments[0].GetPosition().y));  
         }
-        else if (transform.position.x <= bounds.min.x)
+        else if (segments[0].GetPosition().x <= bounds.min.x)
         {
-            segments[0].transform.position = new Vector2(bounds.max.x, segments[0].transform.position.y);         
+            segments[0].SetPosition(new Vector2Int((int)bounds.max.x, segments[0].GetPosition().y));     
         }
-
+        
         // screen wrapping in y dir
-        if (segments[0].transform.position.y >= bounds.max.y)
+        if (segments[0].GetPosition().y >= bounds.max.y)
         {
-            segments[0].transform.position = new Vector2(segments[0].transform.position.x, bounds.min.y);           
+            segments[0].SetPosition(new Vector2Int(segments[0].GetPosition().x, (int)bounds.min.y));          
         }
-        else if (transform.position.y <= bounds.min.y)
+        else if (segments[0].GetPosition().y <= bounds.min.y)
         {
-            segments[0].transform.position = new Vector2(segments[0].transform.position.x, bounds.max.y);          
+            segments[0].SetPosition(new Vector2Int(segments[0].GetPosition().x, (int)bounds.max.y));          
         }
     }
 
     #endregion
 
+    #region Collision Detection
+
+    private void CheckCollisions()
+    {
+        CheckForSelfCollision();
+    }
+
+    private void CheckForSelfCollision()
+    {
+        for (int i = 1; i < segments.Count; i++)
+        {
+            if (segments[0].GetPosition() == segments[i].GetPosition())
+            {
+                if (!isShieldActive)
+                {
+                    PlayerData.MarkAsDead();
+                }
+                
+                return;
+            }
+        }
+    }
     #region Food & Powerups
 
     public void OnItemCollection(ICollectible item)
@@ -217,7 +252,7 @@ public class SnakeController : MonoBehaviour
         for (int i = 0; i < amount; i++)
         {
             SnakeSegment segment = Instantiate(BodySegment.transform, this.transform, true).GetComponent<SnakeSegment>();
-            segment.transform.position = segments[segments.Count - 1].transform.position;
+            segment.SetPosition(segments[segments.Count - 1].GetPosition());
             segments.Add(segment);
         }
     }

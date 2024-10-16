@@ -19,7 +19,7 @@ public class PlayerData
         Color = color;
         
         SnakeController = snakeController;
-        SnakeController.SetPlayerData(this);
+        // SnakeController.SetPlayerData(this);
     }
 
     public void MarkAsDead()

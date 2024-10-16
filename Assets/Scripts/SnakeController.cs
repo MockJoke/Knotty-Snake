@@ -24,13 +24,15 @@ public class SnakeController : MonoBehaviour
     
     private int score = 0;
     
-    private List<SnakeSegment> segments;
+    private List<SnakeSegment> segments = new List<SnakeSegment>();
     
     private Vector2Int moveDirection;
     private Vector2Int playerPosition;
 
     private FoodController foodController;
     private PowerUpController powerUpController;
+
+    private List<SnakeController> otherPlayers = new List<SnakeController>();
 
     #region MonoBehaviour Methods
 
@@ -54,9 +56,11 @@ public class SnakeController : MonoBehaviour
 
     #region Setup related Methods
 
-    public void Initialize(PlayerData playerData, List<SnakeController> otherPlayers = null)
+    public void Initialize(PlayerData playerData, List<SnakeController> others = null)
     {
         SetPlayerData(playerData);
+
+        otherPlayers = others;
         
         segments = new List<SnakeSegment>();
 
@@ -99,7 +103,7 @@ public class SnakeController : MonoBehaviour
             {
                 segment = Instantiate(HeadSegment.transform, this.transform, true).GetComponent<SnakeSegment>();
                 
-                segment.SetPosition(Vector2Int.zero);
+                segment.SetPosition(PlayerData.InitPos);
                 playerPosition = segment.GetPosition();
                 
                 segment.SetColor(PlayerData.Color.HeadColor);
@@ -216,6 +220,11 @@ public class SnakeController : MonoBehaviour
     private void CheckCollisions()
     {
         CheckForSelfCollision();
+
+        if (otherPlayers != null)
+        {
+            CheckForOtherPlayerCollision();
+        }
         
         CheckForItemCollision();
     }
@@ -236,21 +245,42 @@ public class SnakeController : MonoBehaviour
         }
     }
     
-    // private void CheckForOtherPlayerCollision()
-    // {
-    //     if (otherPlayer == null) return;
-    //
-    //     // Check if the head of the snake collides with any segment of the other player's snake
-    //     foreach (var otherPlayerSegment in otherPlayer.segments)
-    //     {
-    //         if (segments[0] == otherPlayerSegment) // Collision detected
-    //         {
-    //             Debug.Log($"Player {PlayerData.PlayerID} collided with Player {otherPlayer.PlayerData.PlayerID}!");
-    //             HandleDeath();
-    //             return;
-    //         }
-    //     }
-    // }
+    private void CheckForOtherPlayerCollision()
+    {
+        // Check if the head of the snake collides with any segment of the other players' snake
+        for (int i = 0; i < otherPlayers.Count; i++)
+        {
+            if (PlayerData.PlayerID < otherPlayers[i].PlayerData.PlayerID)
+            {
+                for (int j = 0; j < otherPlayers[i].segments.Count; j++)
+                {
+                    if (segments[0].GetPosition() == otherPlayers[i].segments[j].GetPosition())
+                    {
+                        if (j == 0)     // Head to Head collisions
+                        {
+                            // For head to head collisions, to avoid the duplicate reporting, only check for one of them based on which one has a lower ID
+                            if (PlayerData.PlayerID < otherPlayers[i].PlayerData.PlayerID)
+                            {
+                                // If two players' head collides, then both of them dies
+                                GameManager.Instance.OnPlayerDeath(otherPlayers[i].PlayerData);
+                                GameManager.Instance.OnPlayerDeath(this.PlayerData);
+                                
+                                GameManager.Instance.CheckForGameOverCondition();
+                            }
+                        }
+                        else            // Head to Body collisions
+                        {
+                            GameManager.Instance.OnPlayerDeath(otherPlayers[i].PlayerData);
+                            
+                            GameManager.Instance.CheckForGameOverCondition();
+                        }
+                        
+                        return;
+                    }
+                }
+            }
+        }
+    }
     
     private void CheckForItemCollision()
     {

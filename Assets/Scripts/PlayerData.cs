@@ -8,15 +8,17 @@ public class PlayerData
     
     public KeyBinding InputKeyBinding { get; private set; }
     public PlayerColor Color { get; private set; }
+    public Vector2Int InitPos { get; private set; }
     
     public SnakeController SnakeController { get; private set; }
 
-    public PlayerData(int playerID, KeyBinding keys, PlayerColor color, SnakeController snakeController)
+    public PlayerData(int playerID, KeyBinding keys, PlayerColor color, Vector2Int pos, SnakeController snakeController)
     {
         PlayerID = playerID;
         IsAlive = true;
         InputKeyBinding = keys;
         Color = color;
+        InitPos = pos;
         
         SnakeController = snakeController;
         // SnakeController.SetPlayerData(this);

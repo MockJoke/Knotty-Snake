@@ -10,7 +10,8 @@ public class SnakeController : MonoBehaviour
     [Header("Body Parts")]
     [SerializeField] private SnakeSegment HeadSegment;
     [SerializeField] private SnakeSegment BodySegment;
-    [Tooltip("Initial snake body size")] [Range(0,5)] public int InitSnakeSize = 3;          
+    [Tooltip("Initial snake body size")] [Range(0,5)] public int InitSnakeSize = 3;
+    [Tooltip("Minimum snake body size required to survive")] [Range(0,5)] public int MinSnakeSize = 2;
     
     [Header("Movement Fields")]
     [Range(1, 20)] public float InitSnakeSpeed = 5f;
@@ -229,7 +230,8 @@ public class SnakeController : MonoBehaviour
             {
                 if (!isShieldActive)
                 {
-                    playerData.MarkAsDead();
+                    GameManager.Instance.OnPlayerDeath(this.playerData);
+                    GameManager.Instance.CheckForGameOverCondition();
                 }
                 
                 return;
@@ -351,10 +353,18 @@ public class SnakeController : MonoBehaviour
 
     public void DecreaseLength(int amount)
     {
-        for (int i = 0; i < amount; i++)
+        if (segments.Count > MinSnakeSize)
         {
-            Destroy(segments[segments.Count - 1].gameObject);
-            segments.RemoveAt(segments.Count - 1);
+            for (int i = 0; i < amount; i++)
+            {
+                Destroy(segments[segments.Count - 1].gameObject);
+                segments.RemoveAt(segments.Count - 1);
+            }
+        }
+        else
+        {
+            GameManager.Instance.OnPlayerDeath(this.playerData);
+            GameManager.Instance.CheckForGameOverCondition();
         }
     }
     

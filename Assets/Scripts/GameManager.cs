@@ -143,13 +143,26 @@ public class GameManager : MonoBehaviour
         }
         else if (alivePlayers.Count == 0)
         {
-            DeclareDraw();
+            if (players.Count > 1)
+            {
+                DeclareDraw();
+            }
+            else
+            {
+                DeclareLoser(players[0]);
+            }
         }
     }
 
     private void DeclareWinner(PlayerData winner)
     {
         Debug.Log($"Player {winner.PlayerID} wins!");
+        IsGameOver = true;
+    }
+    
+    private void DeclareLoser(PlayerData loser)
+    {
+        Debug.Log($"Player {loser.PlayerID} loses!");
         IsGameOver = true;
     }
 

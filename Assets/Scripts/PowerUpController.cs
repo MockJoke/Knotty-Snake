@@ -7,7 +7,6 @@ public class PowerUpController : MonoBehaviour
     [SerializeField] private Collider2D SpawningArea;
     [SerializeField] private List<PowerUp> PowerUpObjects;
     [SerializeField] private float spawnRate;
-    // public float SpawnRate => spawnRate;
     
     private ItemSpawner<PowerUp> itemSpawner;
     
@@ -21,5 +20,10 @@ public class PowerUpController : MonoBehaviour
     void Update()
     {
         itemSpawner.UpdateSpawner();
+    }
+    
+    public List<PowerUp> GetItems()
+    {
+        return itemSpawner.GetActiveItems();
     }
 }

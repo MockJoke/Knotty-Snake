@@ -47,4 +47,4 @@ MonoBehaviour:
   HeadSegment: {fileID: 7287329020249276156, guid: 1343d627830fdae4b98b814bb145a659, type: 3}
   BodySegment: {fileID: 5009516129416037219, guid: e46e19e94a5d6f447861d4665edbb074, type: 3}
   InitSnakeSize: 3
-  InitSnakeSpeed: 10
+  InitSnakeSpeed: 15

@@ -93,7 +93,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3794257470089943401}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -146,6 +146,5 @@ MonoBehaviour:
   powerUpType: 0
   lifeTime: 10
   effectDuration: 15
-  objCollider: {fileID: 7655462961773634026}
   scoreBoostAmount: 50
   speedMultiplier: 1.5

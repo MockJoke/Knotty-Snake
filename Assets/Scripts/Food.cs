@@ -12,33 +12,48 @@ public class Food : MonoBehaviour, ISpawnable, ICollectible
     }
 
     [SerializeField] private FoodType foodType;
+    public FoodType Type => foodType;
     
-    [Range(1, 10)] public int lengthChangeAmt;
+    [SerializeField, Range(1, 10)] private int lengthChangeAmt;
+    public int LengthChangeAmount => lengthChangeAmt;
     
     [SerializeField, Range(1, 30)] private float lifeTime;
     public float LifeTime => lifeTime;
     
-    [SerializeField] private Collider2D objCollider;
-    public Collider2D Collider => objCollider;
+    private Vector2Int Position;
     
-    void Awake()
+    // [SerializeField] private Collider2D objCollider;
+    // public Collider2D Collider => objCollider;
+    
+    // void Awake()
+    // {
+    //     if (objCollider == null)
+    //         objCollider = GetComponent<Collider2D>();
+    // }
+    
+    // public void OnCollect(SnakeController snake)
+    // {
+    //     switch (foodType)
+    //     {
+    //         case FoodType.MassGainer:
+    //             snake.IncreaseLength(lengthChangeAmt);
+    //             break;
+    //         case FoodType.MassBurner:
+    //             snake.DecreaseLength(lengthChangeAmt);
+    //             break;
+    //     }
+    //     
+    //     this.gameObject.SetActive(false);
+    // }
+    
+    public void SetPosition(Vector2Int pos)
     {
-        if (objCollider == null)
-            objCollider = GetComponent<Collider2D>();
+        Position = pos;
+        transform.position = new Vector3(pos.x, pos.y, 0f);
     }
-    
-    public void OnCollect(SnakeController snake)
+
+    public Vector2Int GetPosition()
     {
-        switch (foodType)
-        {
-            case FoodType.MassGainer:
-                snake.IncreaseLength(lengthChangeAmt);
-                break;
-            case FoodType.MassBurner:
-                snake.DecreaseLength(lengthChangeAmt);
-                break;
-        }
-        
-        this.gameObject.SetActive(false);
+        return Position;
     }
 }

@@ -9,10 +9,12 @@ public class ItemSpawner<T> where T : MonoBehaviour, ISpawnable
     private Collider2D spawningArea;
     private Transform parentTransform;
     private List<T> itemPrefabs;
+    
     private float spawnRate;
-
     private float nextSpawnTime;
+    
     private Queue<T> itemPool = new Queue<T>();
+    private List<T> activeItems = new List<T>();
 
     public ItemSpawner(Collider2D area, Transform parent, List<T> prefabs, float rate)
     {
@@ -55,12 +57,11 @@ public class ItemSpawner<T> where T : MonoBehaviour, ISpawnable
         
         newItem.transform.SetParent(parentTransform);
         newItem.gameObject.SetActive(true);
+        activeItems.Add(newItem);
         
-        Vector3 spawnPosition = GetValidSpawnPosition(newItem.Collider);
-        newItem.transform.position = spawnPosition;
-        // newItem.transform.position = GetRandomSpawnPosition();
+        Vector3 spawnPosition = GetValidSpawnPosition();
+        newItem.SetPosition(new Vector2Int((int)spawnPosition.x, (int)spawnPosition.y));
         
-        // Use the item's specific LifeTime property
         CoroutineRunner.Instance.StartCoroutine(DestroyItemAfterLifetime(newItem, Random.Range(newItem.LifeTime - 1, newItem.LifeTime + 1)));
     }
 
@@ -95,7 +96,7 @@ public class ItemSpawner<T> where T : MonoBehaviour, ISpawnable
         }
 
         // Optionally add random duplicates to fill the pool to a desired size
-        while (itemPool.Count < itemPrefabs.Count * 2) // You can adjust the multiplier for pool size
+        while (itemPool.Count < itemPrefabs.Count * 2)
         {
             int randomIndex = Random.Range(0, itemPrefabs.Count);
             T newItem = GameObject.Instantiate(itemPrefabs[randomIndex], parentTransform, true);
@@ -109,12 +110,13 @@ public class ItemSpawner<T> where T : MonoBehaviour, ISpawnable
         yield return new WaitForSeconds(lifetime);
         item.gameObject.SetActive(false);
         itemPool.Enqueue(item);
+        activeItems.Remove(item);
     }
     
-    private Vector3 GetValidSpawnPosition(Collider2D itemCollider)
+    private Vector3 GetValidSpawnPosition()
     {
         Vector3 spawnPosition;
-        int maxAttempts = 5; // Maximum number of attempts to find a valid position
+        int maxAttempts = 5;
         int attempts = 0;
 
         do
@@ -122,14 +124,14 @@ public class ItemSpawner<T> where T : MonoBehaviour, ISpawnable
             spawnPosition = GetRandomSpawnPosition();
             attempts++;
         } 
-        while (IsOverlappingOtherItems(spawnPosition, itemCollider) && attempts < maxAttempts);
+        while (IsOverlappingOtherItems(spawnPosition) && attempts < maxAttempts);
 
         return spawnPosition;
     }
     
     private Vector3 GetRandomSpawnPosition()
     {
-        Bounds bounds = this.spawningArea.bounds;
+        Bounds bounds = spawningArea.bounds;
         
         int x = Mathf.RoundToInt(Random.Range(bounds.min.x, bounds.max.x));
         int y = Mathf.RoundToInt(Random.Range(bounds.min.y, bounds.max.y));
@@ -137,19 +139,37 @@ public class ItemSpawner<T> where T : MonoBehaviour, ISpawnable
         return new Vector3(x, y, 0f);
     }
     
-    private bool IsOverlappingOtherItems(Vector3 position, Collider2D itemCollider)
+    private bool IsOverlappingOtherItems(Vector3 position)
     {
-        itemCollider.transform.position = position; // Temporarily move the collider to the position to check for overlap
-        Collider2D[] hitColliders = Physics2D.OverlapBoxAll(itemCollider.bounds.center, itemCollider.bounds.size, 0f);
-
-        foreach (Collider2D collider in hitColliders)
+        if (activeItems.Count > 0)
         {
-            if (collider.GetComponent<ISpawnable>() != null && collider.gameObject.activeSelf)
+            for (int i = 0; i < activeItems.Count; i++)
             {
-                return true; // There's already an item in this spot
+                if (activeItems[i].transform.position == position)
+                {
+                    return true;
+                }    
             }
         }
 
         return false;
+    }
+
+    public List<T> GetActiveItems()
+    {
+        List<T> items = new List<T>();
+        
+        for (int i = 0; i < activeItems.Count; i++)
+        {
+            if (activeItems[i].gameObject.activeInHierarchy)
+            {
+                items.Add(activeItems[i]);
+            }
+        }
+        
+        activeItems.Clear();
+        activeItems = items;
+        
+        return activeItems;
     }
 }

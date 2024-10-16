@@ -1,5 +1,5 @@
 
 public interface ICollectible
 {
-    public void OnCollect(SnakeController snake);
+    // public void OnCollect(SnakeController snake);
 }

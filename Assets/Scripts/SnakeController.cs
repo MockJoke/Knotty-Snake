@@ -54,7 +54,7 @@ public class SnakeController : MonoBehaviour
 
     #endregion
 
-    #region Setup related Methods
+    #region Init Setup Methods
 
     public void Initialize(PlayerData playerData, List<SnakeController> others = null)
     {

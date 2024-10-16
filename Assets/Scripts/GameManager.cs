@@ -42,6 +42,8 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
+    #region Init Setup Methods
+
     private void InitializeGame()
     {
         int playerCount = 0;
@@ -123,6 +125,10 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region GameOver methods
+
     public void OnPlayerDeath(PlayerData deadPlayerData)
     {
         deadPlayerData.MarkAsDead();
@@ -155,8 +161,14 @@ public class GameManager : MonoBehaviour
         IsGameOver = true;
     }
 
+    #endregion
+
+    #region Getters
+
     public Bounds GetWrappedAreaBounds()
     {
         return WrappedArea.bounds;
     }
+
+    #endregion
 }

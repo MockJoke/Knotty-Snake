@@ -1,15 +1,27 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
+using System.Linq;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
+
+    [SerializeField] private Canvas GamePlayCanvas;
+    [SerializeField] private Canvas GameOverCanvas;
+    
     [SerializeField] private Transform PlayerPanelContainer;
     [SerializeField] private PlayerGamePanel playerPanelPrefab;
 
+    [Serializable]
+    private struct ResultColor
+    {
+        public GameResult result;
+        public Color color;
+    }
+    [SerializeField] private List<ResultColor> resultColors;
+    
     private List<PlayerGamePanel> playerPanels = new List<PlayerGamePanel>();
     
     void Awake()
@@ -55,5 +67,26 @@ public class UIManager : MonoBehaviour
     public void DisplayScoreBoostIndicator(int id, bool toggle)
     {
         playerPanels[id-1].ToggleScoreBoostIndicator(toggle);
+    }
+
+    public void OnGameOver(GameResult result, string message)
+    {
+        GamePlayCanvas.enabled = false;
+        GameOverCanvas.enabled = true;
+        GameOverCanvas.GetComponent<GameOverMenu>().SetBackgroundColor(GetColorByResult(result));
+        GameOverCanvas.GetComponent<GameOverMenu>().SetResult(message);
+    }
+    
+    private Color GetColorByResult(GameResult result)
+    {
+        ResultColor found = resultColors.Find(item => item.result == result);
+
+        // If a match is not found, return a default color
+        if (found.Equals(default(ResultColor)))
+        {
+            return Color.black;
+        }
+
+        return found.color;
     }
 }

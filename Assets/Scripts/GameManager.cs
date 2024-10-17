@@ -157,20 +157,20 @@ public class GameManager : MonoBehaviour
 
     private void DeclareWinner(PlayerData winner)
     {
-        Debug.Log($"Player {winner.PlayerID} wins!");
         IsGameOver = true;
+        UIManager.Instance.OnGameOver(GameResult.Win, $"Player {winner.PlayerID} WINS!");
     }
     
     private void DeclareLoser(PlayerData loser)
     {
-        Debug.Log($"Player {loser.PlayerID} loses!");
         IsGameOver = true;
+        UIManager.Instance.OnGameOver(GameResult.Loss, $"Player {loser.PlayerID} LOSES!");
     }
 
     private void DeclareDraw()
     {
-        Debug.Log("It's a draw!");
         IsGameOver = true;
+        UIManager.Instance.OnGameOver(GameResult.Draw, "It's a DRAW!");
     }
 
     #endregion
@@ -183,4 +183,12 @@ public class GameManager : MonoBehaviour
     }
 
     #endregion
+}
+
+public enum GameResult
+{
+    None,
+    Win,
+    Loss,
+    Draw
 }

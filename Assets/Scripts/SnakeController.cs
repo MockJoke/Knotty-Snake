@@ -18,9 +18,6 @@ public class SnakeController : MonoBehaviour
     
     private float currSnakeSpeed;
     private float moveTimer;
-    private bool isShieldActive = false;
-    private bool isSpeedBoosted = false;
-    private bool isScoreBoosted = false;
     
     private Coroutine speedBoostCoroutine;
     private Coroutine scoreBoostCoroutine;
@@ -228,7 +225,7 @@ public class SnakeController : MonoBehaviour
         {
             if (segments[0].GetPosition() == segments[i].GetPosition())
             {
-                if (!isShieldActive)
+                if (!playerData.IsShieldActive())
                 {
                     GameManager.Instance.OnPlayerDeath(this.playerData);
                     GameManager.Instance.CheckForGameOverCondition();
@@ -348,7 +345,7 @@ public class SnakeController : MonoBehaviour
     private void IncreaseScore(int amount)
     {
         score += amount * currScoreMultiplier;
-        UIManager.Instance.DisplayScore(score);
+        UIManager.Instance.DisplayScore(playerData.PlayerID, score);
     }
 
     public void DecreaseLength(int amount)
@@ -375,7 +372,7 @@ public class SnakeController : MonoBehaviour
 
     public void BoostScore(int scoreMultiplier, float duration)
     {
-        if (isScoreBoosted && scoreBoostCoroutine != null)
+        if (playerData.IsScoreBoosted() && scoreBoostCoroutine != null)
         {
             StopCoroutine(scoreBoostCoroutine);
         }
@@ -385,7 +382,7 @@ public class SnakeController : MonoBehaviour
 
     public void SpeedUp(float speedMultiplier, float duration)
     {
-        if (isSpeedBoosted && speedBoostCoroutine != null)
+        if (playerData.IsSpeedBoosted() && speedBoostCoroutine != null)
         {
             StopCoroutine(speedBoostCoroutine);
         }
@@ -395,31 +392,39 @@ public class SnakeController : MonoBehaviour
     
     private IEnumerator ShieldCoroutine(float duration)
     {
-        isShieldActive = true;
+        playerData.AddPowerUp(PowerUp.PowerUpType.Shield);
+        UIManager.Instance.DisplayShieldIndicator(playerData.PlayerID, true);
+        
         yield return new WaitForSeconds(duration);
-        isShieldActive = false;
+        
+        UIManager.Instance.DisplayShieldIndicator(playerData.PlayerID, false);
+        playerData.RemovePowerUp(PowerUp.PowerUpType.Shield);
     }
     
     private IEnumerator SpeedBoostCoroutine(float speedMultiplier, float duration)
     {
-        isSpeedBoosted = true;
+        playerData.AddPowerUp(PowerUp.PowerUpType.SpeedUp);
         currSnakeSpeed *= speedMultiplier;
+        UIManager.Instance.DisplaySpeedBoostIndicator(playerData.PlayerID, true);
         
         yield return new WaitForSeconds(duration);
-
+        
+        UIManager.Instance.DisplaySpeedBoostIndicator(playerData.PlayerID, false);
         currSnakeSpeed = InitSnakeSpeed;
-        isSpeedBoosted = false;
+        playerData.RemovePowerUp(PowerUp.PowerUpType.SpeedUp);
     }
     
     private IEnumerator ScoreBoostCoroutine(int scoreMultiplier, float duration)
     {
-        isScoreBoosted = true;
+        playerData.AddPowerUp(PowerUp.PowerUpType.ScoreBoost);
         currScoreMultiplier *= scoreMultiplier;
+        UIManager.Instance.DisplayScoreBoostIndicator(playerData.PlayerID, true);
         
         yield return new WaitForSeconds(duration);
 
+        UIManager.Instance.DisplayScoreBoostIndicator(playerData.PlayerID, false);
         currScoreMultiplier = 1;
-        isScoreBoosted = false;
+        playerData.RemovePowerUp(PowerUp.PowerUpType.ScoreBoost);
     }
 
     #endregion

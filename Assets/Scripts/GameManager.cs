@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         InitializeGame();
+        UIManager.Instance.Initialize(players);
     }
 
     #endregion

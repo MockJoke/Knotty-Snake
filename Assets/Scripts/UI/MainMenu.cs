@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MainMenuManager : MonoBehaviour
+public class MainMenu : MonoBehaviour
 {
     [SerializeField] private Button SinglePlayerGameBtn;
     [SerializeField] private Button CoOpGameBtn;

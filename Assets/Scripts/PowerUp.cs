@@ -27,8 +27,8 @@ public class PowerUp : MonoBehaviour, ISpawnable, ICollectible
     // [SerializeField] private Collider2D objCollider;
     // public Collider2D Collider => objCollider;
     
-    [SerializeField] private int scoreBoostAmount = 50;
-    public int ScoreBoostAmount => scoreBoostAmount;
+    [SerializeField, Range(1, 10)] private int scoreMultiplier = 2;
+    public int ScoreMultiplier => scoreMultiplier;
     
     [SerializeField] private float speedMultiplier = 1.5f;
     public float SpeedMultiplier => speedMultiplier;

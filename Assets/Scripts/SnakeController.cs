@@ -10,19 +10,20 @@ public class SnakeController : MonoBehaviour
     [Header("Body Parts")]
     [SerializeField] private SnakeSegment HeadSegment;
     [SerializeField] private SnakeSegment BodySegment;
-    [Tooltip("Initial snake body size")] [Range(0,5)] public int InitSnakeSize = 3;          
+    [Tooltip("Initial snake body size")] [Range(0,5)] public int InitSnakeSize = 3;
+    [Tooltip("Minimum snake body size required to survive")] [Range(0,5)] public int MinSnakeSize = 2;
     
     [Header("Movement Fields")]
     [Range(1, 20)] public float InitSnakeSpeed = 5f;
     
     private float currSnakeSpeed;
     private float moveTimer;
-    private bool isSpeedBoosted = false;
+    
     private Coroutine speedBoostCoroutine;
-
-    private bool isShieldActive = false;
+    private Coroutine scoreBoostCoroutine;
     
     private int score = 0;
+    private int currScoreMultiplier = 1;
     
     private List<SnakeSegment> segments = new List<SnakeSegment>();
     
@@ -44,7 +45,7 @@ public class SnakeController : MonoBehaviour
 
     void Update()
     {
-        if (playerData.IsAlive)
+        if (playerData.IsAlive && !GameManager.Instance.IsGameOver)
         {
             SetInputMoveDirection();
             HandleMovement();
@@ -224,9 +225,10 @@ public class SnakeController : MonoBehaviour
         {
             if (segments[0].GetPosition() == segments[i].GetPosition())
             {
-                if (!isShieldActive)
+                if (!playerData.IsShieldActive())
                 {
-                    playerData.MarkAsDead();
+                    GameManager.Instance.OnPlayerDeath(this.playerData);
+                    GameManager.Instance.CheckForGameOverCondition();
                 }
                 
                 return;
@@ -238,33 +240,40 @@ public class SnakeController : MonoBehaviour
     {
         for (int i = 0; i < otherPlayers.Count; i++)
         {
-            if (playerData.PlayerID < otherPlayers[i].playerData.PlayerID)
+            for (int j = 0; j < otherPlayers[i].segments.Count; j++)
             {
-                for (int j = 0; j < otherPlayers[i].segments.Count; j++)
+                if (segments[0].GetPosition() == otherPlayers[i].segments[j].GetPosition())
                 {
-                    if (segments[0].GetPosition() == otherPlayers[i].segments[j].GetPosition())
+                    if (j == 0)     // Head to Head collisions
                     {
-                        if (j == 0)     // Head to Head collisions
+                        // For head to head collisions, to avoid the duplicate reporting, only check for one of them based on which one has a lower ID
+                        if (playerData.PlayerID < otherPlayers[i].playerData.PlayerID)
                         {
-                            // For head to head collisions, to avoid the duplicate reporting, only check for one of them based on which one has a lower ID
-                            if (playerData.PlayerID < otherPlayers[i].playerData.PlayerID)
+                            // If two players' head collides, then both of them dies
+                            if (!otherPlayers[i].playerData.IsShieldActive())
                             {
-                                // If two players' head collides, then both of them dies
                                 GameManager.Instance.OnPlayerDeath(otherPlayers[i].playerData);
-                                GameManager.Instance.OnPlayerDeath(this.playerData);
-                                
-                                GameManager.Instance.CheckForGameOverCondition();
                             }
-                        }
-                        else            // Head to Body collisions
-                        {
-                            GameManager.Instance.OnPlayerDeath(otherPlayers[i].playerData);
-                            
+
+                            if (!this.playerData.IsShieldActive())
+                            {
+                                GameManager.Instance.OnPlayerDeath(this.playerData);
+                            }
+                                
                             GameManager.Instance.CheckForGameOverCondition();
                         }
-                        
-                        return;
                     }
+                    else            // Head to Body collisions
+                    {
+                        if (!otherPlayers[i].playerData.IsShieldActive())
+                        {
+                            GameManager.Instance.OnPlayerDeath(otherPlayers[i].playerData);
+                        }
+                            
+                        GameManager.Instance.CheckForGameOverCondition();
+                    }
+                        
+                    return;
                 }
             }
         }
@@ -303,7 +312,7 @@ public class SnakeController : MonoBehaviour
                 ActivateShield(powerUp.EffectDuration);
                 break;
             case PowerUp.PowerUpType.ScoreBoost:
-                BoostScore(powerUp.ScoreBoostAmount);
+                BoostScore(powerUp.ScoreMultiplier, powerUp.EffectDuration);
                 break;
             case PowerUp.PowerUpType.SpeedUp:
                 SpeedUp(powerUp.SpeedMultiplier, powerUp.EffectDuration);
@@ -319,6 +328,7 @@ public class SnakeController : MonoBehaviour
         {
             case Food.FoodType.MassGainer:
                 IncreaseLength(food.LengthChangeAmount);
+                IncreaseScore(food.ScoreGainAmount);
                 break;
             case Food.FoodType.MassBurner:
                 DecreaseLength(food.LengthChangeAmount);
@@ -334,17 +344,31 @@ public class SnakeController : MonoBehaviour
         {
             SnakeSegment segment = Instantiate(BodySegment.transform, this.transform, true).GetComponent<SnakeSegment>();
             segment.SetPosition(segments[segments.Count - 1].GetPosition());
-            segment.SetColor(playerData.Color.HeadColor);
+            segment.SetColor(playerData.Color.BodyColor);
             segments.Add(segment);
         }
     }
 
+    private void IncreaseScore(int amount)
+    {
+        score += amount * currScoreMultiplier;
+        UIManager.Instance.DisplayScore(playerData.PlayerID, score);
+    }
+
     public void DecreaseLength(int amount)
     {
-        for (int i = 0; i < amount; i++)
+        if (segments.Count > MinSnakeSize)
         {
-            Destroy(segments[segments.Count - 1].gameObject);
-            segments.RemoveAt(segments.Count - 1);
+            for (int i = 0; i < amount; i++)
+            {
+                Destroy(segments[segments.Count - 1].gameObject);
+                segments.RemoveAt(segments.Count - 1);
+            }
+        }
+        else
+        {
+            GameManager.Instance.OnPlayerDeath(this.playerData);
+            GameManager.Instance.CheckForGameOverCondition();
         }
     }
     
@@ -353,15 +377,19 @@ public class SnakeController : MonoBehaviour
         StartCoroutine(ShieldCoroutine(duration));
     }
 
-    public void BoostScore(int amount)
+    public void BoostScore(int scoreMultiplier, float duration)
     {
-        score += amount;
-        UIManager.Instance.DisplayScore(score);
+        if (playerData.IsScoreBoosted() && scoreBoostCoroutine != null)
+        {
+            StopCoroutine(scoreBoostCoroutine);
+        }
+        
+        scoreBoostCoroutine = StartCoroutine(ScoreBoostCoroutine(scoreMultiplier, duration));
     }
 
     public void SpeedUp(float speedMultiplier, float duration)
     {
-        if (isSpeedBoosted && speedBoostCoroutine != null)
+        if (playerData.IsSpeedBoosted() && speedBoostCoroutine != null)
         {
             StopCoroutine(speedBoostCoroutine);
         }
@@ -371,20 +399,39 @@ public class SnakeController : MonoBehaviour
     
     private IEnumerator ShieldCoroutine(float duration)
     {
-        isShieldActive = true;
+        playerData.AddPowerUp(PowerUp.PowerUpType.Shield);
+        UIManager.Instance.DisplayShieldIndicator(playerData.PlayerID, true);
+        
         yield return new WaitForSeconds(duration);
-        isShieldActive = false;
+        
+        UIManager.Instance.DisplayShieldIndicator(playerData.PlayerID, false);
+        playerData.RemovePowerUp(PowerUp.PowerUpType.Shield);
     }
     
     private IEnumerator SpeedBoostCoroutine(float speedMultiplier, float duration)
     {
-        isSpeedBoosted = true;
+        playerData.AddPowerUp(PowerUp.PowerUpType.SpeedUp);
         currSnakeSpeed *= speedMultiplier;
+        UIManager.Instance.DisplaySpeedBoostIndicator(playerData.PlayerID, true);
+        
+        yield return new WaitForSeconds(duration);
+        
+        UIManager.Instance.DisplaySpeedBoostIndicator(playerData.PlayerID, false);
+        currSnakeSpeed = InitSnakeSpeed;
+        playerData.RemovePowerUp(PowerUp.PowerUpType.SpeedUp);
+    }
+    
+    private IEnumerator ScoreBoostCoroutine(int scoreMultiplier, float duration)
+    {
+        playerData.AddPowerUp(PowerUp.PowerUpType.ScoreBoost);
+        currScoreMultiplier *= scoreMultiplier;
+        UIManager.Instance.DisplayScoreBoostIndicator(playerData.PlayerID, true);
         
         yield return new WaitForSeconds(duration);
 
-        currSnakeSpeed = InitSnakeSpeed;
-        isSpeedBoosted = false;
+        UIManager.Instance.DisplayScoreBoostIndicator(playerData.PlayerID, false);
+        currScoreMultiplier = 1;
+        playerData.RemovePowerUp(PowerUp.PowerUpType.ScoreBoost);
     }
 
     #endregion

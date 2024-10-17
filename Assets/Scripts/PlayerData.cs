@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerData
@@ -12,6 +13,8 @@ public class PlayerData
     
     public SnakeController SnakeController { get; private set; }
 
+    private List<PowerUp.PowerUpType> activePowerUps; 
+
     public PlayerData(int playerID, KeyBinding keys, PlayerColor color, Vector2Int pos, SnakeController snakeController)
     {
         PlayerID = playerID;
@@ -19,6 +22,7 @@ public class PlayerData
         InputKeyBinding = keys;
         Color = color;
         InitPos = pos;
+        activePowerUps = new List<PowerUp.PowerUpType>();
         
         SnakeController = snakeController;
     }
@@ -31,6 +35,31 @@ public class PlayerData
     public void MarkAsAlive()
     {
         IsAlive = true;
+    }
+
+    public void AddPowerUp(PowerUp.PowerUpType powerUp)
+    {
+        activePowerUps.Add(powerUp);
+    }
+
+    public void RemovePowerUp(PowerUp.PowerUpType powerUp)
+    {
+        activePowerUps.Remove(powerUp);
+    }
+
+    public bool IsShieldActive()
+    {
+        return activePowerUps.Contains(PowerUp.PowerUpType.Shield);
+    }
+    
+    public bool IsSpeedBoosted()
+    {
+        return activePowerUps.Contains(PowerUp.PowerUpType.SpeedUp);
+    }
+    
+    public bool IsScoreBoosted()
+    {
+        return activePowerUps.Contains(PowerUp.PowerUpType.ScoreBoost);
     }
 }
 

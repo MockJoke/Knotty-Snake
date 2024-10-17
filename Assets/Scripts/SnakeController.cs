@@ -240,21 +240,21 @@ public class SnakeController : MonoBehaviour
     {
         for (int i = 0; i < otherPlayers.Count; i++)
         {
-            if (playerData.PlayerID < otherPlayers[i].playerData.PlayerID)
+            for (int j = 0; j < otherPlayers[i].segments.Count; j++)
             {
-                for (int j = 0; j < otherPlayers[i].segments.Count; j++)
+                if (segments[0].GetPosition() == otherPlayers[i].segments[j].GetPosition())
                 {
-                    if (segments[0].GetPosition() == otherPlayers[i].segments[j].GetPosition())
+                    if (j == 0)     // Head to Head collisions
                     {
-                        if (j == 0)     // Head to Head collisions
+                        // For head to head collisions, to avoid the duplicate reporting, only check for one of them based on which one has a lower ID
+                        if (playerData.PlayerID < otherPlayers[i].playerData.PlayerID)
                         {
-                            // For head to head collisions, to avoid the duplicate reporting, only check for one of them based on which one has a lower ID
-                            if (playerData.PlayerID < otherPlayers[i].playerData.PlayerID)
+                            // If two players' head collides, then both of them dies
                             if (!otherPlayers[i].playerData.IsShieldActive())
                             {
-                                // If two players' head collides, then both of them dies
                                 GameManager.Instance.OnPlayerDeath(otherPlayers[i].playerData);
                             }
+
                             if (!this.playerData.IsShieldActive())
                             {
                                 GameManager.Instance.OnPlayerDeath(this.playerData);
@@ -262,14 +262,18 @@ public class SnakeController : MonoBehaviour
                                 
                             GameManager.Instance.CheckForGameOverCondition();
                         }
-                        else            // Head to Body collisions
+                    }
+                    else            // Head to Body collisions
+                    {
                         if (!otherPlayers[i].playerData.IsShieldActive())
                         {
                             GameManager.Instance.OnPlayerDeath(otherPlayers[i].playerData);
                         }
-                        
-                        return;
+                            
+                        GameManager.Instance.CheckForGameOverCondition();
                     }
+                        
+                    return;
                 }
             }
         }

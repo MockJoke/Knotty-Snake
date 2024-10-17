@@ -250,19 +250,22 @@ public class SnakeController : MonoBehaviour
                         {
                             // For head to head collisions, to avoid the duplicate reporting, only check for one of them based on which one has a lower ID
                             if (playerData.PlayerID < otherPlayers[i].playerData.PlayerID)
+                            if (!otherPlayers[i].playerData.IsShieldActive())
                             {
                                 // If two players' head collides, then both of them dies
                                 GameManager.Instance.OnPlayerDeath(otherPlayers[i].playerData);
-                                GameManager.Instance.OnPlayerDeath(this.playerData);
-                                
-                                GameManager.Instance.CheckForGameOverCondition();
                             }
+                            if (!this.playerData.IsShieldActive())
+                            {
+                                GameManager.Instance.OnPlayerDeath(this.playerData);
+                            }
+                                
+                            GameManager.Instance.CheckForGameOverCondition();
                         }
                         else            // Head to Body collisions
+                        if (!otherPlayers[i].playerData.IsShieldActive())
                         {
                             GameManager.Instance.OnPlayerDeath(otherPlayers[i].playerData);
-                            
-                            GameManager.Instance.CheckForGameOverCondition();
                         }
                         
                         return;

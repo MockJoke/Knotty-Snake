@@ -23,6 +23,8 @@ public class Food : MonoBehaviour, ISpawnable, ICollectible
     [SerializeField] private int scoreGainAmt = 10;
     public int ScoreGainAmount => scoreGainAmt;
     
+    public Coroutine DestroyCoroutine { get; set; }
+    
     private Vector2Int Position;
     
     public void SetPosition(Vector2Int pos)

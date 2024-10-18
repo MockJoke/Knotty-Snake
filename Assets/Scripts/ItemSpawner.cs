@@ -62,7 +62,7 @@ public class ItemSpawner<T> where T : MonoBehaviour, ISpawnable
         Vector3 spawnPosition = GetValidSpawnPosition();
         newItem.SetPosition(new Vector2Int((int)spawnPosition.x, (int)spawnPosition.y));
         
-        CoroutineRunner.Instance.StartCoroutine(DestroyItemAfterLifetime(newItem, Random.Range(newItem.LifeTime - 1, newItem.LifeTime + 1)));
+        newItem.DestroyCoroutine = CoroutineRunner.Instance.StartCoroutine(DestroyItemAfterLifetime(newItem, Random.Range(newItem.LifeTime - 1, newItem.LifeTime + 1)));
     }
 
     private T GetPooledItem()
@@ -111,6 +111,17 @@ public class ItemSpawner<T> where T : MonoBehaviour, ISpawnable
         item.gameObject.SetActive(false);
         itemPool.Enqueue(item);
         activeItems.Remove(item);
+    }
+    
+    public void RecycleItem(T item)
+    {
+        if (activeItems.Contains(item))
+        {
+            CoroutineRunner.Instance.StopCoroutine(item.DestroyCoroutine);
+            activeItems.Remove(item);
+            item.gameObject.SetActive(false);
+            itemPool.Enqueue(item);
+        }
     }
     
     private Vector3 GetValidSpawnPosition()

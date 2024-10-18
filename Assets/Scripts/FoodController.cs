@@ -10,7 +10,7 @@ public class FoodController : MonoBehaviour
     [SerializeField] private float spawnRate;
     
     private ItemSpawner<Food> itemSpawner;
-
+    
     void Start()
     {
         itemSpawner = new ItemSpawner<Food>(SpawningArea, this.transform, FoodObjects, spawnRate);
@@ -29,5 +29,10 @@ public class FoodController : MonoBehaviour
     public List<Food> GetItems()
     {
         return itemSpawner.GetActiveItems();
+    }
+
+    public void OnItemCollect(Food item)
+    {
+        itemSpawner.RecycleItem(item);
     }
 }

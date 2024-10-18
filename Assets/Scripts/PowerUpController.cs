@@ -29,4 +29,9 @@ public class PowerUpController : MonoBehaviour
     {
         return itemSpawner.GetActiveItems();
     }
+    
+    public void OnItemCollect(PowerUp item)
+    {
+        itemSpawner.RecycleItem(item);
+    }
 }

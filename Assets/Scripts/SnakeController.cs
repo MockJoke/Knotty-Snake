@@ -323,7 +323,7 @@ public class SnakeController : MonoBehaviour
                 break;
         }
         
-        powerUp.gameObject.SetActive(false);
+        powerUpController.OnItemCollect(powerUp);
     }
 
     private void OnFoodCollect(Food food)
@@ -339,7 +339,7 @@ public class SnakeController : MonoBehaviour
                 break;
         }
         
-        food.gameObject.SetActive(false);
+        foodController.OnItemCollect(food);
     }
     
     public void IncreaseLength(int amount)

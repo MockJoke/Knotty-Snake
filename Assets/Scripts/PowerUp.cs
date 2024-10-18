@@ -29,6 +29,8 @@ public class PowerUp : MonoBehaviour, ISpawnable, ICollectible
     
     [SerializeField] private float speedMultiplier = 1.5f;
     public float SpeedMultiplier => speedMultiplier;
+    
+    public Coroutine DestroyCoroutine { get; set; }
 
     private Vector2Int Position;
 

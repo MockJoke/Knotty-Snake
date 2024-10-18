@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
 
     #region MonoBehaviour Methods
 
-    void Awake()
+    void Awake() 
     {
         if (Instance == null)
         {

@@ -770,7 +770,7 @@ MonoBehaviour:
   - {fileID: 3653507580451742728, guid: 38169ef08797c2541a064a481a027a70, type: 3}
   - {fileID: 9178739011531802762, guid: 634d2fa5fe976bf4bb3278da15fff0ad, type: 3}
   - {fileID: 5207124912728435148, guid: 1aa9281a7b90b784f87cc7c2edc657cd, type: 3}
-  spawnRate: 10
+  spawnRate: 7.5
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0

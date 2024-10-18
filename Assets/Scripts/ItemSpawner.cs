@@ -8,12 +8,12 @@ public class ItemSpawner<T> where T : MonoBehaviour, ISpawnable
 {
     private Collider2D spawningArea;
     private Transform parentTransform;
-    private List<T> itemPrefabs;
     
     private float spawnRate;
     private float nextSpawnTime;
     
-    private Queue<T> itemPool = new Queue<T>();
+    private List<T> itemPrefabs;
+    private List<T> itemPool = new List<T>();
     private List<T> activeItems = new List<T>();
 
     public ItemSpawner(Collider2D area, Transform parent, List<T> prefabs, float rate)
@@ -33,7 +33,7 @@ public class ItemSpawner<T> where T : MonoBehaviour, ISpawnable
         {
             T newItem = GameObject.Instantiate(itemPrefabs[i], parentTransform, true);
             newItem.gameObject.SetActive(false);
-            itemPool.Enqueue(newItem);
+            itemPool.Add(newItem);
         }
     }
     
@@ -55,64 +55,105 @@ public class ItemSpawner<T> where T : MonoBehaviour, ISpawnable
     {
         T newItem = GetPooledItem();
         
-        newItem.transform.SetParent(parentTransform);
         newItem.gameObject.SetActive(true);
+        itemPool.Remove(newItem);
         activeItems.Add(newItem);
         
         Vector3 spawnPosition = GetValidSpawnPosition();
         newItem.SetPosition(new Vector2Int((int)spawnPosition.x, (int)spawnPosition.y));
         
-        CoroutineRunner.Instance.StartCoroutine(DestroyItemAfterLifetime(newItem, Random.Range(newItem.LifeTime - 1, newItem.LifeTime + 1)));
+        newItem.DestroyCoroutine = CoroutineRunner.Instance.StartCoroutine(DestroyItemAfterLifetime(newItem, Random.Range(newItem.LifeTime - 1, newItem.LifeTime + 1)));
     }
 
     private T GetPooledItem()
     {
-        if (itemPool.Count > 0)
+        if (itemPool.Count == 0)
         {
-            return itemPool.Dequeue();
-        }
-        else
-        {
-            // If the pool is empty, refill with a balanced selection of items
             RefillPool();
-            return itemPool.Dequeue();
         }
+
+        T item = SelectItemByProbability(itemPool);
+
+        if (item)
+        {
+            return item;
+        }
+
+        // Fallback (in case of rounding issues), return the first item
+        return itemPool[0];
+    }
+    
+    private T SelectItemByProbability(List<T> itemsList)
+    {
+        float totalProbability = 0f;
+    
+        // Calculate total probability
+        for (int i = 0; i < itemsList.Count; i++)
+        {
+            totalProbability += itemsList[i].SpawnProbability;
+        }
+
+        // Generate a random number within the total probability range
+        float randomValue = Random.Range(0, totalProbability);
+        float cumulativeProbability = 0f;
+    
+        // Select the item based on weighted probability
+        for (int i = 0; i < itemsList.Count; i++)
+        {
+            cumulativeProbability += itemsList[i].SpawnProbability;
+            if (randomValue <= cumulativeProbability)
+            {
+                return itemsList[i];
+            }
+        }
+
+        return null;
     }
     
     private void RefillPool()
     {
-        List<int> usedIndexes = new List<int>();
+        InitializeItemPool();
         
-        // Refill the pool with an even distribution of all item types
-        for (int i = 0; i < itemPrefabs.Count; i++)
-        {
-            if (!usedIndexes.Contains(i))
-            {
-                T newItem = GameObject.Instantiate(itemPrefabs[i], parentTransform, true);
-                newItem.gameObject.SetActive(false);
-                itemPool.Enqueue(newItem);
-                usedIndexes.Add(i);
-            }
-        }
-
-        // Optionally add random duplicates to fill the pool to a desired size
-        while (itemPool.Count < itemPrefabs.Count * 2)
-        {
-            int randomIndex = Random.Range(0, itemPrefabs.Count);
-            T newItem = GameObject.Instantiate(itemPrefabs[randomIndex], parentTransform, true);
-            newItem.gameObject.SetActive(false);
-            itemPool.Enqueue(newItem);
-        }
+        // while (itemPool.Count < itemPrefabs.Count * 2)
+        // {
+        //     T newItem = SelectItemByProbability(itemPrefabs);
+        //
+        //     if (!newItem)
+        //     {
+        //         newItem = itemPrefabs[0];
+        //     }
+        //     
+        //     newItem = GameObject.Instantiate(newItem, parentTransform, true);
+        //     newItem.gameObject.SetActive(false);
+        //     itemPool.Add(newItem);
+        // }
     }
 
     private IEnumerator DestroyItemAfterLifetime(T item, float lifetime)
     {
         yield return new WaitForSeconds(lifetime);
-        item.gameObject.SetActive(false);
-        itemPool.Enqueue(item);
-        activeItems.Remove(item);
+
+        if (item)
+        {
+            item.gameObject.SetActive(false);
+            activeItems.Remove(item);
+            itemPool.Add(item);
+        }
     }
     
+    public void RecycleItem(T item)
+    {
+        if (activeItems.Contains(item))
+        {
+            CoroutineRunner.Instance.StopCoroutine(item.DestroyCoroutine);
+            item.gameObject.SetActive(false);
+            activeItems.Remove(item);
+            itemPool.Add(item);
+        }
+    }
+
+    #region Methods for Selecting Item SpawnPosition
+
     private Vector3 GetValidSpawnPosition()
     {
         Vector3 spawnPosition;
@@ -155,6 +196,10 @@ public class ItemSpawner<T> where T : MonoBehaviour, ISpawnable
         return false;
     }
 
+    #endregion
+
+    #region Getters
+
     public List<T> GetActiveItems()
     {
         List<T> items = new List<T>();
@@ -172,4 +217,6 @@ public class ItemSpawner<T> where T : MonoBehaviour, ISpawnable
         
         return activeItems;
     }
+
+    #endregion
 }

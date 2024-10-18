@@ -3,7 +3,9 @@ using UnityEngine;
 public class SnakeSegment : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer sprite;
-
+    
+    public FlickerEffect flickerEffect;
+    
     protected Vector2Int Position;
         
     protected virtual void Awake()

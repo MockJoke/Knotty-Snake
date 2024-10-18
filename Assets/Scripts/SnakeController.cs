@@ -27,6 +27,7 @@ public class SnakeController : MonoBehaviour
     
     private List<SnakeSegment> segments = new List<SnakeSegment>();
     
+    private Vector2Int inputDirection;
     private Vector2Int moveDirection;
     private Vector2Int playerPosition;
 
@@ -67,9 +68,11 @@ public class SnakeController : MonoBehaviour
         switch (playerData.PlayerID)
         {
             case 1:
+                inputDirection = Vector2Int.right;
                 moveDirection = Vector2Int.right;
                 break;
             case 2:
+                inputDirection = Vector2Int.left;
                 moveDirection = Vector2Int.left;
                 break;
         }
@@ -127,11 +130,11 @@ public class SnakeController : MonoBehaviour
         {
             if (Input.GetKeyDown(playerData.InputKeyBinding.UpKey))
             {
-                moveDirection = Vector2Int.up;
+                inputDirection = Vector2Int.up;
             }
             else if (Input.GetKeyDown(playerData.InputKeyBinding.DownKey))
             {
-                moveDirection = Vector2Int.down;
+                inputDirection = Vector2Int.down;
             }
         }
 
@@ -140,11 +143,11 @@ public class SnakeController : MonoBehaviour
         {
             if (Input.GetKeyDown(playerData.InputKeyBinding.LeftKey))
             {
-                moveDirection = Vector2Int.left;
+                inputDirection = Vector2Int.left;
             }
             else if (Input.GetKeyDown(playerData.InputKeyBinding.RightKey))
             {
-                moveDirection = Vector2Int.right;
+                inputDirection = Vector2Int.right;
             }
         }
     }
@@ -164,6 +167,8 @@ public class SnakeController : MonoBehaviour
 
     private void UpdateMovement()
     {
+        moveDirection = inputDirection;
+        
         Vector2Int prevPos = segments[0].GetPosition();
         
         // Update the head position
@@ -227,6 +232,7 @@ public class SnakeController : MonoBehaviour
             {
                 if (!playerData.IsShieldActive())
                 {
+                    segments[0].flickerEffect?.Play();
                     GameManager.Instance.OnPlayerDeath(this.playerData);
                     GameManager.Instance.CheckForGameOverCondition();
                 }
@@ -252,11 +258,13 @@ public class SnakeController : MonoBehaviour
                             // If two players' head collides, then both of them dies
                             if (!otherPlayers[i].playerData.IsShieldActive())
                             {
+                                otherPlayers[i].segments[0].flickerEffect?.Play();
                                 GameManager.Instance.OnPlayerDeath(otherPlayers[i].playerData);
                             }
 
                             if (!this.playerData.IsShieldActive())
                             {
+                                segments[0].flickerEffect?.Play();
                                 GameManager.Instance.OnPlayerDeath(this.playerData);
                             }
                                 
@@ -267,6 +275,7 @@ public class SnakeController : MonoBehaviour
                     {
                         if (!otherPlayers[i].playerData.IsShieldActive())
                         {
+                            otherPlayers[i].segments[0].flickerEffect?.Play();
                             GameManager.Instance.OnPlayerDeath(otherPlayers[i].playerData);
                         }
                             
@@ -319,7 +328,7 @@ public class SnakeController : MonoBehaviour
                 break;
         }
         
-        powerUp.gameObject.SetActive(false);
+        powerUpController.OnItemCollect(powerUp);
     }
 
     private void OnFoodCollect(Food food)
@@ -335,7 +344,7 @@ public class SnakeController : MonoBehaviour
                 break;
         }
         
-        food.gameObject.SetActive(false);
+        foodController.OnItemCollect(food);
     }
     
     public void IncreaseLength(int amount)
@@ -367,6 +376,7 @@ public class SnakeController : MonoBehaviour
         }
         else
         {
+            segments[0].flickerEffect?.Play();
             GameManager.Instance.OnPlayerDeath(this.playerData);
             GameManager.Instance.CheckForGameOverCondition();
         }

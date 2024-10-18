@@ -14,6 +14,9 @@ public class Food : MonoBehaviour, ISpawnable, ICollectible
     [SerializeField] private FoodType foodType;
     public FoodType Type => foodType;
     
+    [SerializeField, Range(0f, 1f)] private float spawnProbability = 0.5f;
+    public float SpawnProbability => spawnProbability;
+    
     [SerializeField, Range(1, 10)] private int lengthChangeAmt = 1;
     public int LengthChangeAmount => lengthChangeAmt;
     
@@ -23,31 +26,9 @@ public class Food : MonoBehaviour, ISpawnable, ICollectible
     [SerializeField] private int scoreGainAmt = 10;
     public int ScoreGainAmount => scoreGainAmt;
     
+    public Coroutine DestroyCoroutine { get; set; }
+    
     private Vector2Int Position;
-    
-    // [SerializeField] private Collider2D objCollider;
-    // public Collider2D Collider => objCollider;
-    
-    // void Awake()
-    // {
-    //     if (objCollider == null)
-    //         objCollider = GetComponent<Collider2D>();
-    // }
-    
-    // public void OnCollect(SnakeController snake)
-    // {
-    //     switch (foodType)
-    //     {
-    //         case FoodType.MassGainer:
-    //             snake.IncreaseLength(lengthChangeAmt);
-    //             break;
-    //         case FoodType.MassBurner:
-    //             snake.DecreaseLength(lengthChangeAmt);
-    //             break;
-    //     }
-    //     
-    //     this.gameObject.SetActive(false);
-    // }
     
     public void SetPosition(Vector2Int pos)
     {

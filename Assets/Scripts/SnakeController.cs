@@ -27,6 +27,7 @@ public class SnakeController : MonoBehaviour
     
     private List<SnakeSegment> segments = new List<SnakeSegment>();
     
+    private Vector2Int inputDirection;
     private Vector2Int moveDirection;
     private Vector2Int playerPosition;
 
@@ -67,9 +68,11 @@ public class SnakeController : MonoBehaviour
         switch (playerData.PlayerID)
         {
             case 1:
+                inputDirection = Vector2Int.right;
                 moveDirection = Vector2Int.right;
                 break;
             case 2:
+                inputDirection = Vector2Int.left;
                 moveDirection = Vector2Int.left;
                 break;
         }
@@ -127,11 +130,11 @@ public class SnakeController : MonoBehaviour
         {
             if (Input.GetKeyDown(playerData.InputKeyBinding.UpKey))
             {
-                moveDirection = Vector2Int.up;
+                inputDirection = Vector2Int.up;
             }
             else if (Input.GetKeyDown(playerData.InputKeyBinding.DownKey))
             {
-                moveDirection = Vector2Int.down;
+                inputDirection = Vector2Int.down;
             }
         }
 
@@ -140,11 +143,11 @@ public class SnakeController : MonoBehaviour
         {
             if (Input.GetKeyDown(playerData.InputKeyBinding.LeftKey))
             {
-                moveDirection = Vector2Int.left;
+                inputDirection = Vector2Int.left;
             }
             else if (Input.GetKeyDown(playerData.InputKeyBinding.RightKey))
             {
-                moveDirection = Vector2Int.right;
+                inputDirection = Vector2Int.right;
             }
         }
     }
@@ -164,6 +167,8 @@ public class SnakeController : MonoBehaviour
 
     private void UpdateMovement()
     {
+        moveDirection = inputDirection;
+        
         Vector2Int prevPos = segments[0].GetPosition();
         
         // Update the head position

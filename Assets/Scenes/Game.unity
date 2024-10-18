@@ -766,10 +766,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpawningArea: {fileID: 22975198}
-  PowerUpObjects:
-  - {fileID: 5207124912728435148, guid: 1aa9281a7b90b784f87cc7c2edc657cd, type: 3}
+  ItemPrefabs:
   - {fileID: 3653507580451742728, guid: 38169ef08797c2541a064a481a027a70, type: 3}
   - {fileID: 9178739011531802762, guid: 634d2fa5fe976bf4bb3278da15fff0ad, type: 3}
+  - {fileID: 5207124912728435148, guid: 1aa9281a7b90b784f87cc7c2edc657cd, type: 3}
   spawnRate: 10
 --- !u!1 &519420028
 GameObject:
@@ -2397,9 +2397,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SpawningArea: {fileID: 22975198}
-  FoodObjects:
-  - {fileID: 1292665848901355217, guid: 5c6fdb81220eb5b4c965b93324058fde, type: 3}
+  ItemPrefabs:
   - {fileID: 7305952863905441105, guid: d261e738c6e7fde4ab4b65c41d28bca5, type: 3}
+  - {fileID: 1292665848901355217, guid: 5c6fdb81220eb5b4c965b93324058fde, type: 3}
   spawnRate: 5
 --- !u!1 &2076507334
 GameObject:
@@ -2545,7 +2545,7 @@ SceneRoots:
   - {fileID: 1140572790}
   - {fileID: 1593513610}
   - {fileID: 737086628}
+  - {fileID: 336714773}
   - {fileID: 2073009286}
   - {fileID: 504172913}
-  - {fileID: 336714773}
   - {fileID: 246526812}

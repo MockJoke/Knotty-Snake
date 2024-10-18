@@ -144,7 +144,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   powerUpType: 2
-  lifeTime: 10
+  spawnProbability: 0.35
+  lifeTime: 13.5
   effectDuration: 20
   scoreMultiplier: 2
   speedMultiplier: 2

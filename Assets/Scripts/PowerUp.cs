@@ -17,6 +17,9 @@ public class PowerUp : MonoBehaviour, ISpawnable, ICollectible
     [SerializeField] private PowerUpType powerUpType;
 
     public PowerUpType Type => powerUpType;
+    
+    [SerializeField, Range(0f, 1f)] private float spawnProbability = 0.5f;
+    public float SpawnProbability => spawnProbability;
 
     [SerializeField, Range(1, 30)] private float lifeTime;
     public float LifeTime => lifeTime;

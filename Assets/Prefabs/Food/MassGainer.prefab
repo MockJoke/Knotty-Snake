@@ -144,6 +144,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   foodType: 0
+  spawnProbability: 0.75
   lengthChangeAmt: 1
-  lifeTime: 15
+  lifeTime: 17.5
   scoreGainAmt: 10

@@ -14,6 +14,9 @@ public class Food : MonoBehaviour, ISpawnable, ICollectible
     [SerializeField] private FoodType foodType;
     public FoodType Type => foodType;
     
+    [SerializeField, Range(0f, 1f)] private float spawnProbability = 0.5f;
+    public float SpawnProbability => spawnProbability;
+    
     [SerializeField, Range(1, 10)] private int lengthChangeAmt = 1;
     public int LengthChangeAmount => lengthChangeAmt;
     

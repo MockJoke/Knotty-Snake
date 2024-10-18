@@ -25,30 +25,6 @@ public class Food : MonoBehaviour, ISpawnable, ICollectible
     
     private Vector2Int Position;
     
-    // [SerializeField] private Collider2D objCollider;
-    // public Collider2D Collider => objCollider;
-    
-    // void Awake()
-    // {
-    //     if (objCollider == null)
-    //         objCollider = GetComponent<Collider2D>();
-    // }
-    
-    // public void OnCollect(SnakeController snake)
-    // {
-    //     switch (foodType)
-    //     {
-    //         case FoodType.MassGainer:
-    //             snake.IncreaseLength(lengthChangeAmt);
-    //             break;
-    //         case FoodType.MassBurner:
-    //             snake.DecreaseLength(lengthChangeAmt);
-    //             break;
-    //     }
-    //     
-    //     this.gameObject.SetActive(false);
-    // }
-    
     public void SetPosition(Vector2Int pos)
     {
         Position = pos;

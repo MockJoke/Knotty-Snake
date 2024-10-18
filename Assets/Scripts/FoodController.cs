@@ -20,6 +20,9 @@ public class FoodController : MonoBehaviour
     
     void Update()
     {
+        if (GameManager.Instance.IsGameOver)
+            return;
+        
         itemSpawner.UpdateSpawner();
     }
 

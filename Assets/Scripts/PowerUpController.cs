@@ -19,6 +19,9 @@ public class PowerUpController : MonoBehaviour
     
     void Update()
     {
+        if (GameManager.Instance.IsGameOver)
+            return;
+        
         itemSpawner.UpdateSpawner();
     }
     

@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     private List<PlayerData> players = new List<PlayerData>();
 
     private List<PlayerData> alivePlayers = new List<PlayerData>();
+    private List<PlayerData> deadPlayers = new List<PlayerData>();
     
     public bool IsGameOver { get; private set; }
 
@@ -66,6 +67,7 @@ public class GameManager : MonoBehaviour
     {
         players.Clear();
         alivePlayers.Clear();
+        deadPlayers.Clear();
         
         SetInitPlayerPositions(count);
         
@@ -134,6 +136,7 @@ public class GameManager : MonoBehaviour
     {
         deadPlayerData.MarkAsDead();
         alivePlayers.Remove(deadPlayerData);
+        deadPlayers.Add(deadPlayerData);
     }
 
     public void CheckForGameOverCondition()
@@ -158,19 +161,19 @@ public class GameManager : MonoBehaviour
     private void DeclareWinner(PlayerData winner)
     {
         IsGameOver = true;
-        UIManager.Instance.OnGameOver(GameResult.Win, $"Player {winner.PlayerID} WINS!");
+        StartCoroutine(CallMethodAfterDelay(GameResult.Win, $"Player {winner.PlayerID} WINS!", 1.5f));
     }
     
     private void DeclareLoser(PlayerData loser)
     {
         IsGameOver = true;
-        UIManager.Instance.OnGameOver(GameResult.Loss, $"Player {loser.PlayerID} LOSES!");
+        StartCoroutine(CallMethodAfterDelay(GameResult.Loss, $"Player {loser.PlayerID} LOSES!", 1.5f));
     }
 
     private void DeclareDraw()
     {
         IsGameOver = true;
-        UIManager.Instance.OnGameOver(GameResult.Draw, "It's a DRAW!");
+        StartCoroutine(CallMethodAfterDelay(GameResult.Draw, "It's a DRAW!", 1.5f));
     }
 
     #endregion
@@ -183,6 +186,13 @@ public class GameManager : MonoBehaviour
     }
 
     #endregion
+    
+    private IEnumerator CallMethodAfterDelay(GameResult result, string msg, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        UIManager.Instance.OnGameOver(result, msg);
+    }
 }
 
 public enum GameResult

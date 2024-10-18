@@ -108,9 +108,13 @@ public class ItemSpawner<T> where T : MonoBehaviour, ISpawnable
     private IEnumerator DestroyItemAfterLifetime(T item, float lifetime)
     {
         yield return new WaitForSeconds(lifetime);
-        item.gameObject.SetActive(false);
-        itemPool.Enqueue(item);
-        activeItems.Remove(item);
+
+        if (item)
+        {
+            itemPool.Enqueue(item);
+            activeItems.Remove(item);
+            item.gameObject.SetActive(false);
+        }
     }
     
     public void RecycleItem(T item)
@@ -118,9 +122,9 @@ public class ItemSpawner<T> where T : MonoBehaviour, ISpawnable
         if (activeItems.Contains(item))
         {
             CoroutineRunner.Instance.StopCoroutine(item.DestroyCoroutine);
+            itemPool.Enqueue(item);
             activeItems.Remove(item);
             item.gameObject.SetActive(false);
-            itemPool.Enqueue(item);
         }
     }
     

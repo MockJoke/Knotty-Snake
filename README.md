@@ -1,4 +1,4 @@
-# Pixel Adventure
+# Knotty Snake
 
 A fast-paced snake game with local multi-player mode made using Unity game engine
 

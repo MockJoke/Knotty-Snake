@@ -18,7 +18,8 @@ public class SnakeController : MonoBehaviour
     
     private float currSnakeSpeed;
     private float moveTimer;
-    
+
+    private Coroutine shieldCoroutine;
     private Coroutine speedBoostCoroutine;
     private Coroutine scoreBoostCoroutine;
     
@@ -384,7 +385,12 @@ public class SnakeController : MonoBehaviour
     
     public void ActivateShield(float duration)
     {
-        StartCoroutine(ShieldCoroutine(duration));
+        if (playerData.IsShieldActive() && shieldCoroutine != null)
+        {
+            StopCoroutine(shieldCoroutine);    
+        }
+        
+        shieldCoroutine = StartCoroutine(ShieldCoroutine(duration));
     }
 
     public void BoostScore(int scoreMultiplier, float duration)

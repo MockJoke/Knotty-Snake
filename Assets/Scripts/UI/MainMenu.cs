@@ -6,6 +6,7 @@ public class MainMenu : MonoBehaviour
 {
     [Header("Menu Canvases")] 
     [SerializeField] private GameObject MainMenuCanvas;
+    [SerializeField] private GameObject MainMenuDecoration;
     [SerializeField] private GameObject HelpMenuCanvas;
     [SerializeField] private GameObject SettingsMenuCanvas;
 
@@ -30,6 +31,7 @@ public class MainMenu : MonoBehaviour
     public void OnHelp()
     {
         MainMenuCanvas.SetActive(false);
+        MainMenuDecoration.SetActive(false);
         HelpMenuCanvas.SetActive(true);
     }
 
@@ -37,6 +39,7 @@ public class MainMenu : MonoBehaviour
     {
         HelpMenuCanvas.SetActive(false);
         MainMenuCanvas.SetActive(true);
+        MainMenuDecoration.SetActive(true);
     }
     
     private void LoadGameScene()

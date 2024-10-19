@@ -73,8 +73,7 @@ public class UIManager : MonoBehaviour
     {
         GamePlayCanvas.enabled = false;
         GameOverCanvas.enabled = true;
-        GameOverCanvas.GetComponent<GameOverMenu>().SetBackgroundColor(GetColorByResult(result));
-        GameOverCanvas.GetComponent<GameOverMenu>().SetResult(message);
+        GameOverCanvas.GetComponent<GameOverMenu>().ShowResult(message, GetColorByResult(result));
     }
     
     private Color GetColorByResult(GameResult result)
@@ -84,7 +83,7 @@ public class UIManager : MonoBehaviour
         // If a match is not found, return a default color
         if (found.Equals(default(ResultColor)))
         {
-            return Color.black;
+            return Color.white;
         }
 
         return found.color;

@@ -1,6 +1,6 @@
 # Knotty Snake
 
-A fast-paced snake game with local multi-player mode made using Unity game engine
+A fast-paced snake game with local multi-player mode (made using Unity game engine)
 
 ## Demo
 

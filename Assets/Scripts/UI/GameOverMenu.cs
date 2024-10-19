@@ -33,13 +33,10 @@ public class GameOverMenu : MonoBehaviour
         SceneManager.LoadScene("Game");
     }
 
-    public void SetBackgroundColor(Color color)
+    public void ShowResult(string msg, Color color)
     {
+        Result.text = $"{msg}";
+        Result.color = new Color(color.r, color.g, color.g, 1);
         bgImage.color = color;
-    }
-
-    public void SetResult(string result)
-    {
-        Result.text = $"{result}";
     }
 }

@@ -38,9 +38,7 @@ public enum AudioType
 
     #region GameResult 151-200
     
-    OnWin = 151,
-    OnLoss = 152,
-    OnDraw = 153,
+    OnGameOver = 151,
     
     #endregion
 }

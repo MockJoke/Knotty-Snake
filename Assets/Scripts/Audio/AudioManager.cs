@@ -18,6 +18,7 @@ public class AudioManager : MonoBehaviour
 
     [SerializeField] private bool AutoStartBgMusic = true;
     private bool isMuted = false;
+    private bool isBgMusicPlaying = false;
     
     void Awake()
     {
@@ -54,10 +55,9 @@ public class AudioManager : MonoBehaviour
     
     void Update() 
     {
-        // if we are playing a track (which wasn't on loop) from the playlist
-        if (currBgMusicIndex != -1) 
+        if (isBgMusicPlaying) 
         {
-            // and it has stopped playing
+            // // if we are playing a track (which wasn't on loop) from the playlist & it has stopped playing
             if (!bgSounds[currBgMusicIndex].source.isPlaying)
             {
                 PlayMusic(true);
@@ -122,15 +122,18 @@ public class AudioManager : MonoBehaviour
         
         if (random || audioName == AudioType.None)
         {
-            // pick a random song from our playlist & make sure it's not the same as prev one
-            int index = GetRandomBgMusicIndex();
-            
-            while (index == currBgMusicIndex)
+            if (bgSounds.Length > 1)
             {
-                index = GetRandomBgMusicIndex();
+                // pick a random song from our playlist & make sure it's not the same as prev one
+                int index;
+                do
+                {
+                    index = GetRandomBgMusicIndex();
+                } 
+                while (index == currBgMusicIndex);
+                
+                currBgMusicIndex = index;
             }
-            
-            currBgMusicIndex = index;
         }
         else
         {
@@ -146,6 +149,8 @@ public class AudioManager : MonoBehaviour
         bgSounds[currBgMusicIndex].source.time = 0;
         bgSounds[currBgMusicIndex].source.volume = bgSounds[currBgMusicIndex].volume / volReduceFactor;
         bgSounds[currBgMusicIndex].source.Play();
+        
+        isBgMusicPlaying = true;
     }
 
     public void ReduceBgMusicSourceVolume(float volReduceFactor)
@@ -156,7 +161,7 @@ public class AudioManager : MonoBehaviour
     public void StopMusic()
     {
         bgSounds[currBgMusicIndex].source.Stop();
-        currBgMusicIndex = -1;
+        isBgMusicPlaying = false;
     }
 
     private int GetRandomBgMusicIndex()
@@ -164,13 +169,13 @@ public class AudioManager : MonoBehaviour
         return UnityEngine.Random.Range(0, bgSounds.Length);
     }
     
-    public AudioType getCurrBgSongName() 
+    public AudioType GetCurrBgSongName() 
     {
         return bgSounds[currBgMusicIndex].name;
     }
 
     // if the music volume change update all the audio sources
-    public void musicVolumeChanged(float val)
+    public void OnMusicVolumeChanged(float val)
     {
         mVol = val;
         PlayerPrefs.SetFloat("MusicVolume", mVol);
@@ -182,7 +187,7 @@ public class AudioManager : MonoBehaviour
     }
 
     // if the effects volume changed update the audio sources
-    public void effectVolumeChanged(float val) 
+    public void OnEffectVolumeChanged(float val) 
     {
         eVol = val;
         PlayerPrefs.SetFloat("EffectsVolume", eVol);

@@ -953,18 +953,6 @@ MonoBehaviour:
     pitch: 1
     source: {fileID: 0}
     loop: 1
-  - name: 152
-    clip: {fileID: 8300000, guid: b1001ecf7c72a43438809071b775e79f, type: 3}
-    volume: 0.5
-    pitch: 1
-    source: {fileID: 0}
-    loop: 1
-  - name: 153
-    clip: {fileID: 8300000, guid: b1001ecf7c72a43438809071b775e79f, type: 3}
-    volume: 0.5
-    pitch: 1
-    source: {fileID: 0}
-    loop: 1
   bgSounds:
   - name: 21
     clip: {fileID: 8300000, guid: 604f0a837482a27458f42c0a57352634, type: 3}

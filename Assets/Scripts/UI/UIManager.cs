@@ -74,21 +74,7 @@ public class UIManager : MonoBehaviour
         AudioManager.Instance.StopMusic();
         AudioManager.Instance.PlaySound(AudioType.SceneTransition);
         
-        switch (result)
-        {
-            case GameResult.Win:
-                AudioManager.Instance.PlaySound(AudioType.OnWin);
-                break;
-            case GameResult.Loss:
-                AudioManager.Instance.PlaySound(AudioType.OnLoss);
-                break;
-            case GameResult.Draw:
-                AudioManager.Instance.PlaySound(AudioType.OnDraw);
-                break;
-            default:
-                AudioManager.Instance.PlaySound(AudioType.OnDraw);
-                break;
-        }
+        AudioManager.Instance.PlaySound(AudioType.OnGameOver);
         
         GamePlayCanvas.enabled = false;
         GameOverCanvas.enabled = true;

@@ -52,20 +52,6 @@ public class GameOverMenu : MonoBehaviour
 
     private void StopGameOverSound()
     {
-        switch (gameResult)
-        {
-            case GameResult.Win:
-                AudioManager.Instance.StopSound(AudioType.OnWin);
-                break;
-            case GameResult.Loss:
-                AudioManager.Instance.StopSound(AudioType.OnLoss);
-                break;
-            case GameResult.Draw:
-                AudioManager.Instance.StopSound(AudioType.OnDraw);
-                break;
-            default:
-                AudioManager.Instance.StopSound(AudioType.OnDraw);
-                break;
-        }
+        AudioManager.Instance.StopSound(AudioType.OnGameOver);
     }
 }

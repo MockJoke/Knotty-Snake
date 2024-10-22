@@ -15,8 +15,9 @@ public class AudioManager : MonoBehaviour
 
     private float mVol;     // Global music volume
     private float eVol;     // Global effects volume
-    
-    public bool isMuted = false;
+
+    [SerializeField] private bool AutoStartBgMusic = true;
+    private bool isMuted = false;
     
     void Awake()
     {
@@ -45,7 +46,8 @@ public class AudioManager : MonoBehaviour
         if (updateBgMusicOnSceneChange) 
             SceneManager.activeSceneChanged += ChangeBgMusicOnSceneChange;
         
-        PlayMusic(true);
+        if (AutoStartBgMusic)
+            PlayMusic(true);
         
         SetMuteState();
     }
@@ -107,7 +109,7 @@ public class AudioManager : MonoBehaviour
         s.source.Stop();
     }
     
-    public void PlayMusic(bool random, AudioType audioName = AudioType.None)
+    public void PlayMusic(bool random, AudioType audioName = AudioType.None, float volReduceFactor = 1f)
     {
         if (bgSounds.Length == 0)
             return;
@@ -120,8 +122,15 @@ public class AudioManager : MonoBehaviour
         
         if (random || audioName == AudioType.None)
         {
-            // pick a random song from our playlist
-            currBgMusicIndex = GetRandomBgMusicIndex();
+            // pick a random song from our playlist & make sure it's not the same as prev one
+            int index = GetRandomBgMusicIndex();
+            
+            while (index == currBgMusicIndex)
+            {
+                index = GetRandomBgMusicIndex();
+            }
+            
+            currBgMusicIndex = index;
         }
         else
         {
@@ -133,8 +142,15 @@ public class AudioManager : MonoBehaviour
                 currBgMusicIndex = GetRandomBgMusicIndex();
             }
         }
-            
+
+        bgSounds[currBgMusicIndex].source.time = 0;
+        bgSounds[currBgMusicIndex].source.volume = bgSounds[currBgMusicIndex].volume / volReduceFactor;
         bgSounds[currBgMusicIndex].source.Play();
+    }
+
+    public void ReduceBgMusicSourceVolume(float volReduceFactor)
+    {
+        bgSounds[currBgMusicIndex].source.volume = bgSounds[currBgMusicIndex].volume / volReduceFactor;
     }
 
     public void StopMusic()

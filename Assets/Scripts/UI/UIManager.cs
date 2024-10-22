@@ -71,9 +71,28 @@ public class UIManager : MonoBehaviour
 
     public void OnGameOver(GameResult result, string message)
     {
+        AudioManager.Instance.StopMusic();
+        AudioManager.Instance.PlaySound(AudioType.SceneTransition);
+        
+        switch (result)
+        {
+            case GameResult.Win:
+                AudioManager.Instance.PlaySound(AudioType.OnWin);
+                break;
+            case GameResult.Loss:
+                AudioManager.Instance.PlaySound(AudioType.OnLoss);
+                break;
+            case GameResult.Draw:
+                AudioManager.Instance.PlaySound(AudioType.OnDraw);
+                break;
+            default:
+                AudioManager.Instance.PlaySound(AudioType.OnDraw);
+                break;
+        }
+        
         GamePlayCanvas.enabled = false;
         GameOverCanvas.enabled = true;
-        GameOverCanvas.GetComponent<GameOverMenu>().ShowResult(message, GetColorByResult(result));
+        GameOverCanvas.GetComponent<GameOverMenu>().ShowResult(result, message, GetColorByResult(result));
     }
     
     private Color GetColorByResult(GameResult result)

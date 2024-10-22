@@ -3,44 +3,44 @@ public enum AudioType
 {
     None = 0,
 
-    #region BG Music 1 - 10
+    #region BG Music 1 - 50
     
-    bg1 = 1,
-    bg2 = 2,
-    bg3 = 3,
-    bg4 = 4,
-    bg5 = 5,
-    bg6 = 6,
-    bg7 = 7,
-    bg8 = 8,
-    bg9 = 9,
-    bg10 = 10,
+    MenuBgM = 1,
+    
+    GamePlayBgM1 = 21,
+    GamePlayBgM2 = 22,
+    GamePlayBgM3 = 23,
+    GamePlayBgM4 = 24,
+    GamePlayBgM5 = 25,
     
     #endregion
 
-    #region UI 11-20
+    #region UI 51-100
     
-    Click = 11,
-    Hover = 12,
-    PanelPopUp = 13,
-    GameStart = 14,
+    Click = 51,
+    Hover = 52,
+    PanelPopUp = 53,
+    SceneTransition = 54,
+    
     #endregion
     
-    #region ItemCollection 21-40
+    #region ItemCollection 101-150
     
-    MassGainerCollect = 11,
-    MassBurnerCollect = 12,
-    ShieldCollect = 13,
-    SpeedUpCollect = 14,
-    ScoreBoostCollect = 15,
+    MassGainerCollect = 101,
+    MassBurnerCollect = 102,
+    ShieldCollect = 103,
+    SpeedUpCollect = 104,
+    ScoreBoostCollect = 105,
+    
+    ItemSpawn = 126,
     
     #endregion
 
-    #region GameResult 41-50
+    #region GameResult 151-200
     
-    OnWin = 31,
-    OnLoss = 32,
-    OnDraw = 33,
+    OnWin = 151,
+    OnLoss = 152,
+    OnDraw = 153,
     
     #endregion
 }

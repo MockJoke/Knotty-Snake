@@ -62,6 +62,8 @@ public class ItemSpawner<T> where T : MonoBehaviour, ISpawnable
         Vector3 spawnPosition = GetValidSpawnPosition();
         newItem.SetPosition(new Vector2Int((int)spawnPosition.x, (int)spawnPosition.y));
         
+        AudioManager.Instance.PlaySound(AudioType.ItemSpawn);
+        
         newItem.DestroyCoroutine = CoroutineRunner.Instance.StartCoroutine(DestroyItemAfterLifetime(newItem, Random.Range(newItem.LifeTime - 1, newItem.LifeTime + 1)));
     }
 

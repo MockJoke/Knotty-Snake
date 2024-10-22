@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -10,15 +11,22 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private GameObject HelpMenuCanvas;
     [SerializeField] private GameObject SettingsMenuCanvas;
 
+    private void Start()
+    {
+        AudioManager.Instance.PlayMusic(true, volReduceFactor: 2.5f);
+    }
+
     public void OnSinglePlayerGame()
     {
         GameSettings.Instance.SetGameMode(GameMode.SinglePlayer);
+        AudioManager.Instance.ReduceBgMusicSourceVolume(1f);
         LoadGameScene();
     }
 
     public void OnCoOpGame()
     {
         GameSettings.Instance.SetGameMode(GameMode.CoOp);
+        AudioManager.Instance.ReduceBgMusicSourceVolume(1f);
         LoadGameScene();
     }
     
@@ -44,6 +52,7 @@ public class MainMenu : MonoBehaviour
     
     private void LoadGameScene()
     {
+        AudioManager.Instance.PlaySound(AudioType.SceneTransition);
         SceneManager.LoadScene($"Game");
     }
 }

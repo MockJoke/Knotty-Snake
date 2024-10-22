@@ -319,12 +319,15 @@ public class SnakeController : MonoBehaviour
         switch (powerUp.Type)
         {
             case PowerUp.PowerUpType.Shield:
+                AudioManager.Instance.PlaySound(AudioType.ShieldCollect);
                 ActivateShield(powerUp.EffectDuration);
                 break;
             case PowerUp.PowerUpType.ScoreBoost:
+                AudioManager.Instance.PlaySound(AudioType.ScoreBoostCollect);
                 BoostScore(powerUp.ScoreMultiplier, powerUp.EffectDuration);
                 break;
             case PowerUp.PowerUpType.SpeedUp:
+                AudioManager.Instance.PlaySound(AudioType.SpeedUpCollect);
                 SpeedUp(powerUp.SpeedMultiplier, powerUp.EffectDuration);
                 break;
         }
@@ -337,10 +340,12 @@ public class SnakeController : MonoBehaviour
         switch (food.Type)
         {
             case Food.FoodType.MassGainer:
+                AudioManager.Instance.PlaySound(AudioType.MassGainerCollect);
                 IncreaseLength(food.LengthChangeAmount);
                 IncreaseScore(food.ScoreGainAmount);
                 break;
             case Food.FoodType.MassBurner:
+                AudioManager.Instance.PlaySound(AudioType.MassBurnerCollect);
                 DecreaseLength(food.LengthChangeAmount);
                 break;
         }

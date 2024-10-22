@@ -387,10 +387,22 @@ public class SnakeController : MonoBehaviour
     {
         if (playerData.IsShieldActive() && shieldCoroutine != null)
         {
-            StopCoroutine(shieldCoroutine);    
+            StopCoroutine(shieldCoroutine);
+            playerData.RemovePowerUp(PowerUp.PowerUpType.Shield);
         }
         
         shieldCoroutine = StartCoroutine(ShieldCoroutine(duration));
+    }
+    
+    public void SpeedUp(float speedMultiplier, float duration)
+    {
+        if (playerData.IsSpeedBoosted() && speedBoostCoroutine != null)
+        {
+            StopCoroutine(speedBoostCoroutine);
+            playerData.RemovePowerUp(PowerUp.PowerUpType.SpeedUp);
+        }
+        
+        speedBoostCoroutine = StartCoroutine(SpeedBoostCoroutine(speedMultiplier, duration));
     }
 
     public void BoostScore(int scoreMultiplier, float duration)
@@ -398,19 +410,10 @@ public class SnakeController : MonoBehaviour
         if (playerData.IsScoreBoosted() && scoreBoostCoroutine != null)
         {
             StopCoroutine(scoreBoostCoroutine);
+            playerData.RemovePowerUp(PowerUp.PowerUpType.ScoreBoost);
         }
         
         scoreBoostCoroutine = StartCoroutine(ScoreBoostCoroutine(scoreMultiplier, duration));
-    }
-
-    public void SpeedUp(float speedMultiplier, float duration)
-    {
-        if (playerData.IsSpeedBoosted() && speedBoostCoroutine != null)
-        {
-            StopCoroutine(speedBoostCoroutine);
-        }
-        
-        speedBoostCoroutine = StartCoroutine(SpeedBoostCoroutine(speedMultiplier, duration));
     }
     
     private IEnumerator ShieldCoroutine(float duration)

@@ -14,6 +14,8 @@ public class GameOverMenu : MonoBehaviour
     [SerializeField] private Button HomeBtn;
     [SerializeField] private Button RestartBtn;
 
+    private GameResult gameResult;
+
     void Awake()
     {
         if (HomeBtn)
@@ -25,21 +27,31 @@ public class GameOverMenu : MonoBehaviour
 
     private void OnHome()
     {
+        StopGameOverSound();
+        AudioManager.Instance.PlaySound(AudioType.SceneTransition);
+        AudioManager.Instance.PlayMusic(true, volReduceFactor: 2.5f);
         SceneManager.LoadScene("Home");
     }
 
     private void OnRestart()
     {
+        StopGameOverSound();
+        AudioManager.Instance.PlaySound(AudioType.SceneTransition);
+        AudioManager.Instance.PlayMusic(true);
         SceneManager.LoadScene("Game");
     }
 
-    public void SetBackgroundColor(Color color)
+    public void ShowResult(GameResult result, string msg, Color color)
     {
+        gameResult = result;
+        
+        Result.text = $"{msg}";
+        Result.color = new Color(color.r, color.g, color.g, 1);
         bgImage.color = color;
     }
 
-    public void SetResult(string result)
+    private void StopGameOverSound()
     {
-        Result.text = $"{result}";
+        AudioManager.Instance.StopSound(AudioType.OnGameOver);
     }
 }

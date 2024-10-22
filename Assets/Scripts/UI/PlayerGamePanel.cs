@@ -37,7 +37,7 @@ public class PlayerGamePanel : MonoBehaviour
     
     public void SetScore(int score)
     {
-        Score.text = $"Score: {score}";
+        Score.text = $"Score: <color=#F8D205>{score}</color>";
     }
 
     public void ToggleShieldIndicator(bool toggle)

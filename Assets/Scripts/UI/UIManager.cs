@@ -71,10 +71,14 @@ public class UIManager : MonoBehaviour
 
     public void OnGameOver(GameResult result, string message)
     {
+        AudioManager.Instance.StopMusic();
+        AudioManager.Instance.PlaySound(AudioType.SceneTransition);
+        
+        AudioManager.Instance.PlaySound(AudioType.OnGameOver);
+        
         GamePlayCanvas.enabled = false;
         GameOverCanvas.enabled = true;
-        GameOverCanvas.GetComponent<GameOverMenu>().SetBackgroundColor(GetColorByResult(result));
-        GameOverCanvas.GetComponent<GameOverMenu>().SetResult(message);
+        GameOverCanvas.GetComponent<GameOverMenu>().ShowResult(result, message, GetColorByResult(result));
     }
     
     private Color GetColorByResult(GameResult result)
@@ -84,7 +88,7 @@ public class UIManager : MonoBehaviour
         // If a match is not found, return a default color
         if (found.Equals(default(ResultColor)))
         {
-            return Color.black;
+            return Color.white;
         }
 
         return found.color;

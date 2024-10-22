@@ -161,13 +161,19 @@ public class GameManager : MonoBehaviour
     private void DeclareWinner(PlayerData winner)
     {
         IsGameOver = true;
-        StartCoroutine(CallMethodAfterDelay(GameResult.Win, $"Player {winner.PlayerID} WINS!", 1.5f));
+
+        string msg = GameSettings.Instance.SelectedGameMode == GameMode.SinglePlayer ? "You WIN!" : $"Player {winner.PlayerID} WINS!";
+        
+        StartCoroutine(CallMethodAfterDelay(GameResult.Win, msg, 1.5f));
     }
     
     private void DeclareLoser(PlayerData loser)
     {
         IsGameOver = true;
-        StartCoroutine(CallMethodAfterDelay(GameResult.Loss, $"Player {loser.PlayerID} LOSES!", 1.5f));
+        
+        string msg = GameSettings.Instance.SelectedGameMode == GameMode.SinglePlayer ? "You LOSE!" : $"Player {loser.PlayerID} LOSES!";
+        
+        StartCoroutine(CallMethodAfterDelay(GameResult.Loss, msg, 1.5f));
     }
 
     private void DeclareDraw()

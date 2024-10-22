@@ -16,14 +16,16 @@ public class GameSettings : MonoBehaviour
 
     void Awake()
     {
-        if (Instance == null)
+        if (Instance != null && Instance != this)
         {
-            Instance = this;
-            DontDestroyOnLoad(this.gameObject);
+            Destroy(gameObject);
+            Debug.Log($"{Instance.name} {gameObject.name} An instance of this singleton already exists");
         }
         else
         {
-            Destroy(this.gameObject);
+            Instance = this;
+            
+            DontDestroyOnLoad(this);
         }
     }
 

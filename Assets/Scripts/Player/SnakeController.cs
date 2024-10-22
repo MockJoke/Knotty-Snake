@@ -404,6 +404,7 @@ public class SnakeController : MonoBehaviour
         if (playerData.IsSpeedBoosted() && speedBoostCoroutine != null)
         {
             StopCoroutine(speedBoostCoroutine);
+            currSnakeSpeed = InitSnakeSpeed;
             playerData.RemovePowerUp(PowerUp.PowerUpType.SpeedUp);
         }
         
@@ -415,6 +416,7 @@ public class SnakeController : MonoBehaviour
         if (playerData.IsScoreBoosted() && scoreBoostCoroutine != null)
         {
             StopCoroutine(scoreBoostCoroutine);
+            currScoreMultiplier = 1;
             playerData.RemovePowerUp(PowerUp.PowerUpType.ScoreBoost);
         }
         

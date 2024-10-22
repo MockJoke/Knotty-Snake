@@ -32,41 +32,18 @@ A fast-paced snake game with local multi-player mode (made using Unity game engi
 
 ## Features
 
-[//]: # (- 2D platformer character with all basic mechanics i.e. movement, flipping, jump-extra jump, wall grab & wall jump, dash, animations)
-
-[//]: # (- 2D patrolling & basic shooting AI for enemies)
-
-[//]: # (- Multiple physics & joint based traps)
-
-[//]: # (- Character selection with unique movement abilities for each character)
-
-[//]: # (- AudioManager to play specific or randomised background music, to play sound effects, to change music on level change etc.)
-
-[//]: # (- Level system)
-
-[//]: # (- Checkpoint system & respawn)
-
-[//]: # (- Simple PlayerPrefs based save system covering all necessary fields)
-
-[//]: # (- UI/UX for game states &#40;win, lose, pause&#41;, health, title screen etc.)
+- All the core functionalities of a snake game
+- Various power-ups & foods with specific cause-effect
+- Item spawning based on Object Pooling, with random positions, Variable life-time, effect duration & cool-down   
+- A two player co-op mode (with easy extensibility for more players)
+- AudioManager to play specific or randomised background music, to play sound effects, to change music on level change etc.
+- UI/UX for game states (win, lose, draw), health, title screen etc.
 
 ### TODO:
 
-[//]: # (- [x] Upgrade to new input system)
-
-[//]: # (- [ ] Gamepad support for UI/UX )
-
-[//]: # (- [ ] Input rebinding)
-
-[//]: # (- [x] Wall Climb & Jump)
-
-[//]: # (- [ ] More unique enemies)
-
-[//]: # (- [ ] Background scrolling)
-
-[//]: # (- [ ] Player character with combat support)
-
-[//]: # (- [ ] Screen Transition Fade In/out)
+- [ ] Screen Transition Fade In/out & some more UI/UX enhancements
+- [ ] Particle effects on item collection
+- [ ] Gamepad support
 
 ## Credits & Attributions
 
@@ -78,11 +55,9 @@ A fast-paced snake game with local multi-player mode (made using Unity game engi
 - fonts: https://fontstruct.com/
 - All the images are made using a vector graphics software
 
-[//]: # (#### Sounds: )
-
-[//]: # (- https://freesound.org/people/RHumphries/packs/117/)
-
-[//]: # (- https://www.freesfx.co.uk/)
+#### Sounds:
+- effect sounds: https://pixabay.com/sound-effects/
+- background music: https://github.com/a327ex/SNKRX?tab=MIT-1-ov-file
 
 ### Disclaimer
 

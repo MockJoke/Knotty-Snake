@@ -43,6 +43,7 @@ A fast-paced snake game with local multi-player mode (made using Unity game engi
 - [ ] Particle effects on item collection
 - [ ] Gamepad support
 - [ ] Input remapping
+- [ ] Settings menu
 
 ## Credits & Attributions
 

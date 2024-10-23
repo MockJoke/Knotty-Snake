@@ -667,8 +667,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 137.9, y: -597.205}
-  m_SizeDelta: {x: 275.8, y: 83.13}
+  m_AnchoredPosition: {x: 233.98, y: -597.205}
+  m_SizeDelta: {x: 467.96, y: 83.13}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &170879430
 MonoBehaviour:
@@ -690,7 +690,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: CO-OP MODE
+  m_text: MULTI-PLAYER MODE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 577d6d44c6b4b274db0828c1d6929756, type: 2}
   m_sharedMaterial: {fileID: -527599185338605194, guid: 577d6d44c6b4b274db0828c1d6929756, type: 2}
@@ -1038,7 +1038,7 @@ GameObject:
   - component: {fileID: 347895285}
   - component: {fileID: 347895284}
   m_Layer: 5
-  m_Name: CoOp [Btn]
+  m_Name: MultiPlayer [Btn]
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2971,7 +2971,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Co-Op
+  m_text: Multi Player
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 577d6d44c6b4b274db0828c1d6929756, type: 2}
   m_sharedMaterial: {fileID: -527599185338605194, guid: 577d6d44c6b4b274db0828c1d6929756, type: 2}
@@ -4052,8 +4052,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 634283208}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.36300325}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0.14591062}
+  m_AnchorMax: {x: 1, y: 0.69920176}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -4919,8 +4919,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1582.01, y: 941.92004}
+  m_AnchoredPosition: {x: 0, y: 326.1917}
+  m_SizeDelta: {x: 1582.01, y: 1084.42}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1291279931
 MonoBehaviour:
@@ -5019,7 +5019,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Co-Op
+  m_text: Multi Player
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 577d6d44c6b4b274db0828c1d6929756, type: 2}
   m_sharedMaterial: {fileID: -527599185338605194, guid: 577d6d44c6b4b274db0828c1d6929756, type: 2}
@@ -5178,8 +5178,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1020813372}
   m_HandleRect: {fileID: 1020813371}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.63699675
+  m_Value: 0.3266347
+  m_Size: 0.55329114
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -6147,7 +6147,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 113.575, y: -795.34503}
+  m_AnchoredPosition: {x: 113.575, y: -937.84503}
   m_SizeDelta: {x: 227.15, y: 83.13}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1773696106
@@ -6344,7 +6344,7 @@ GameObject:
   - component: {fileID: 1829762109}
   - component: {fileID: 1829762111}
   m_Layer: 5
-  m_Name: CoOp [Btn]
+  m_Name: MultiPlayer [Btn]
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7507,8 +7507,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 538.055, y: -648.77}
-  m_SizeDelta: {x: 1076.11, y: 95.01}
+  m_AnchoredPosition: {x: 647.005, y: -648.77}
+  m_SizeDelta: {x: 1294.01, y: 237.51}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1939021949
 MonoBehaviour:
@@ -7530,10 +7530,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'If Snake1 bites Snake2 then Snake2 will die, and vice versa.
-
-    If both
-    of them bite each other together, then obviously both of them dies.'
+  m_text: "The game has a local multi-player mode which currently supports two players,
+    alongside \nthe regular single-player mode.\nGAMEPLAY:\nIf Snake1 bites Snake2
+    then Snake2 will die, and vice versa.\nIf both of them bite each other together,
+    then obviously both of them dies."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 577d6d44c6b4b274db0828c1d6929756, type: 2}
   m_sharedMaterial: {fileID: -527599185338605194, guid: 577d6d44c6b4b274db0828c1d6929756, type: 2}
@@ -7957,7 +7957,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 150.8, y: -846.91003}
+  m_AnchoredPosition: {x: 150.8, y: -989.41003}
   m_SizeDelta: {x: 301.6, y: 95.01}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &2006220157

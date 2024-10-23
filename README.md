@@ -21,6 +21,12 @@ A fast-paced snake game with local multi-player mode (made using Unity game engi
     <img src="README-Resources/draw-screen.png" alt="Draw-Screen" width="300px">
 </p>
 
+<br>
+
+<div align="center">
+  <a href="https://youtu.be/vDkErKck6YA" target="_blank">Demo Video</a>
+</div>
+
 ## Features
 
 - All the core functionalities of a snake game
@@ -33,6 +39,7 @@ A fast-paced snake game with local multi-player mode (made using Unity game engi
 ### TODO:
 
 - [ ] Screen Transition Fade In/out & some more UI/UX enhancements
+- [ ] More challenges for both single & multi player mode
 - [ ] Particle effects on item collection
 - [ ] Gamepad support
 - [ ] Input remapping

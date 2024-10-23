@@ -38,14 +38,33 @@ public class UIManager : MonoBehaviour
 
     public void Initialize(List<PlayerData> players)
     {
+        for (int i = 0; i < playerPanels.Count; i++)
+        {
+            Destroy(playerPanels[i]);    
+        }
+        
         playerPanels.Clear();
         
+        // evenly position the player panels
+        float parentWidth = PlayerPanelContainer.GetComponent<RectTransform>().rect.width;
+        float panelWidth = playerPanelPrefab.GetComponent<RectTransform>().rect.width;
+
+        var spacing = players.Count == 1
+            ? 0
+            : (parentWidth - panelWidth) / (players.Count - 1);
+
         for (int i = 0; i < players.Count; i++)
         {
             PlayerGamePanel panel = Instantiate(playerPanelPrefab, PlayerPanelContainer, true);
             panel.SetPlayerID(players[i].PlayerID);
             panel.SetPlayerIndicator(players[i].Color.HeadColor);
             playerPanels.Add(panel);
+            
+            RectTransform panelRect = panel.GetComponent<RectTransform>();
+
+            float xPos = (-parentWidth / 2) + ((i * spacing) + (panelWidth / 2));
+            
+            panelRect.anchoredPosition = new Vector2(xPos, 0f);
         }
     }
 

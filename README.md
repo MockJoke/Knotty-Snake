@@ -6,36 +6,27 @@ A fast-paced snake game with local multi-player mode (made using Unity game engi
 
 [Play on itch](https://mockjoke.itch.io/knotty-snake)
 
-[//]: # (<p align="center">)
+<p align="center">
+    <img src="README-Resources/title-screen.png" alt="Title-Screen" width="300px">
+    <img src="README-Resources/help-menu.png" alt="Help-Menu" width="300px">
+</p>
 
-[//]: # (    <img src="README-Resources/Start-Screen.png" alt="Start-Screen" width="300px">)
+<p align="center">
+    <img src="README-Resources/single-player.png" alt="Single Player GameMode" width="300px">
+    <img src="README-Resources/win-screen.png" alt="Win-Screen" width="300px">
+</p>
 
-[//]: # (    <img src="README-Resources/CharacterSelection-Menu.png" alt="CharacterSelection-Menu" width="300px">)
-
-[//]: # (</p>)
-
-[//]: # (<p align="center">)
-
-[//]: # (    <img src="README-Resources/Gameplay-Level2.png" alt="Gameplay-Level2" width="300px">)
-
-[//]: # (    <img src="README-Resources/Gameplay-Level3.png" alt="Gameplay-Level3" width="300px">)
-
-[//]: # (</p>)
-
-[//]: # (<p align="center">)
-
-[//]: # (    <img src="README-Resources/Gameplay-Level4.png" alt="Gameplay-Level4" width="300px">)
-
-[//]: # (    <img src="README-Resources/ExtraLives-Menu.png" alt="ExtraLives-Menu" width="300px">)
-
-[//]: # (</p>)
+<p align="center">
+    <img src="README-Resources/multi-player.png" alt="Two Player GameMode" width="300px">
+    <img src="README-Resources/draw-screen.png" alt="Draw-Screen" width="300px">
+</p>
 
 ## Features
 
 - All the core functionalities of a snake game
 - Various power-ups & foods with specific cause-effect
 - Item spawning based on Object Pooling, with random positions, Variable life-time, effect duration & cool-down   
-- A two player co-op mode (with easy extensibility for more players)
+- A local two player mode (with easy extensibility for more players)
 - AudioManager to play specific or randomised background music, to play sound effects, to change music on level change etc.
 - UI/UX for game states (win, lose, draw), health, title screen etc.
 
@@ -44,6 +35,7 @@ A fast-paced snake game with local multi-player mode (made using Unity game engi
 - [ ] Screen Transition Fade In/out & some more UI/UX enhancements
 - [ ] Particle effects on item collection
 - [ ] Gamepad support
+- [ ] Input remapping
 
 ## Credits & Attributions
 

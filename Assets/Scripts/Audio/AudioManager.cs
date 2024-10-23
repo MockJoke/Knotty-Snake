@@ -20,6 +20,9 @@ public class AudioManager : MonoBehaviour
     private bool isMuted = false;
     private bool isBgMusicPlaying = false;
     
+    private bool isGameFocused = true;
+    private bool isCurrBgMusicOnLoop = false;
+    
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -44,18 +47,30 @@ public class AudioManager : MonoBehaviour
         createAudioSources(effectSounds, eVol);     // create sources for effects
         createAudioSources(bgSounds, mVol);   // create sources for music
         
-        if (updateBgMusicOnSceneChange) 
+        if (updateBgMusicOnSceneChange)
+        {
             SceneManager.activeSceneChanged += ChangeBgMusicOnSceneChange;
+            Application.focusChanged += OnApplicationFocusChanged;
+        }
         
         if (AutoStartBgMusic)
             PlayMusic(true);
         
         SetMuteState();
     }
-    
+
+    void OnDestroy()
+    {
+        if (updateBgMusicOnSceneChange)
+        {
+            SceneManager.activeSceneChanged -= ChangeBgMusicOnSceneChange;
+            Application.focusChanged -= OnApplicationFocusChanged;
+        }
+    }
+
     void Update() 
     {
-        if (isBgMusicPlaying) 
+        if (isBgMusicPlaying && isGameFocused && !isCurrBgMusicOnLoop) 
         {
             // // if we are playing a track (which wasn't on loop) from the playlist & it has stopped playing
             if (!bgSounds[currBgMusicIndex].source.isPlaying)
@@ -64,13 +79,20 @@ public class AudioManager : MonoBehaviour
             }
         }
     }
-
+    
+    private void OnApplicationFocusChanged(bool hasFocus)
+    {
+        isGameFocused = hasFocus;
+    }
+    
     private void ChangeBgMusicOnSceneChange(Scene curr, Scene next)
     {
+        if (!isGameFocused)
+            return;
+        
         PlayMusic(true);
     }
     
-    // create sources
     private void createAudioSources(Sound[] sounds, float volume) 
     {
         foreach (Sound s in sounds) 
@@ -151,6 +173,7 @@ public class AudioManager : MonoBehaviour
         bgSounds[currBgMusicIndex].source.Play();
         
         isBgMusicPlaying = true;
+        isCurrBgMusicOnLoop = bgSounds[currBgMusicIndex].source.loop;
     }
 
     public void ReduceBgMusicSourceVolume(float volReduceFactor)

@@ -9,37 +9,48 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private GameObject MainMenuCanvas;
     [SerializeField] private GameObject MainMenuDecoration;
     [SerializeField] private GameObject HelpMenuCanvas;
-    [SerializeField] private GameObject SettingsMenuCanvas;
+    [SerializeField] private SettingsMenu SettingsMenu;
 
     private void Start()
     {
-        AudioManager.Instance.PlayMusic(true, volReduceFactor: 2.5f);
+        AudioManager.Instance.PlayMusic(true, volReduceFactorVal: 2.5f);
     }
 
+    public void OpenHomeMenu()
+    {
+        MainMenuCanvas.SetActive(true);
+        MainMenuDecoration.SetActive(true);
+    }
+
+    public void CloseHomeMenu()
+    {
+        MainMenuCanvas.SetActive(false);
+        MainMenuDecoration.SetActive(false);
+    }
+    
     public void OnSinglePlayerGame()
     {
         GameSettings.Instance.SetGameMode(GameMode.SinglePlayer);
-        AudioManager.Instance.ReduceBgMusicSourceVolume(1f);
+        AudioManager.Instance.SetVolReduceFactor(1f);
         LoadGameScene();
     }
 
     public void OnCoOpGame()
     {
         GameSettings.Instance.SetGameMode(GameMode.CoOp);
-        AudioManager.Instance.ReduceBgMusicSourceVolume(1f);
+        AudioManager.Instance.SetVolReduceFactor(1f);
         LoadGameScene();
     }
     
     public void OnSettings()
     {
-        MainMenuCanvas.SetActive(false);
-        SettingsMenuCanvas.SetActive(true);
+        CloseHomeMenu();
+        SettingsMenu.OpenMenu();
     }
 
     public void OnHelp()
     {
-        MainMenuCanvas.SetActive(false);
-        MainMenuDecoration.SetActive(false);
+        CloseHomeMenu();
         HelpMenuCanvas.SetActive(true);
     }
 

@@ -22,6 +22,8 @@ public class AudioManager : MonoBehaviour
     
     private bool isGameFocused = true;
     private bool isCurrBgMusicOnLoop = false;
+
+    private float volReduceFactor = 1f;
     
     void Awake()
     {
@@ -131,7 +133,7 @@ public class AudioManager : MonoBehaviour
         s.source.Stop();
     }
     
-    public void PlayMusic(bool random, AudioType audioName = AudioType.None, float volReduceFactor = 1f)
+    public void PlayMusic(bool random, AudioType audioName = AudioType.None, float volReduceFactorVal = 1f)
     {
         if (bgSounds.Length == 0)
             return;
@@ -167,18 +169,27 @@ public class AudioManager : MonoBehaviour
                 currBgMusicIndex = GetRandomBgMusicIndex();
             }
         }
+        
+        SetVolReduceFactor(volReduceFactorVal);
 
         bgSounds[currBgMusicIndex].source.time = 0;
-        bgSounds[currBgMusicIndex].source.volume = bgSounds[currBgMusicIndex].volume / volReduceFactor;
+        bgSounds[currBgMusicIndex].source.volume = bgSounds[currBgMusicIndex].volume / volReduceFactor * mVol;
         bgSounds[currBgMusicIndex].source.Play();
         
         isBgMusicPlaying = true;
         isCurrBgMusicOnLoop = bgSounds[currBgMusicIndex].source.loop;
     }
 
-    public void ReduceBgMusicSourceVolume(float volReduceFactor)
+    public void SetVolReduceFactor(float factor)
     {
-        bgSounds[currBgMusicIndex].source.volume = bgSounds[currBgMusicIndex].volume / volReduceFactor;
+        volReduceFactor = factor;
+    }
+
+    public void ReduceBgmVolume(float factor)
+    {
+        SetVolReduceFactor(factor);
+        
+        bgSounds[currBgMusicIndex].source.volume /= volReduceFactor;
     }
 
     public void StopMusic()
@@ -205,7 +216,7 @@ public class AudioManager : MonoBehaviour
         
         foreach (Sound m in bgSounds) 
         {
-            m.source.volume = m.volume * mVol;
+            m.source.volume = m.volume * mVol / volReduceFactor;
         }
     }
 

@@ -29,7 +29,7 @@ public class GameOverMenu : MonoBehaviour
     {
         StopGameOverSound();
         AudioManager.Instance.PlaySound(AudioType.SceneTransition);
-        AudioManager.Instance.PlayMusic(true, volReduceFactor: 2.5f);
+        AudioManager.Instance.PlayMusic(true, volReduceFactorVal: 2.5f);
         SceneManager.LoadScene("Home");
     }
 

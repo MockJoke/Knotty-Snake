@@ -31,19 +31,19 @@ A fast-paced snake game with local multi-player mode (made using Unity game engi
 
 - All the core functionalities of a snake game
 - Various power-ups & foods with specific cause-effect
-- Item spawning based on Object Pooling, with random positions, Variable life-time, effect duration & cool-down   
+- Item spawning based on Object Pooling, with Random Positions, Probability Distribution, Variable Life-time, Effect Duration & Cool-Down   
 - A local two player mode (with easy extensibility for more players)
 - AudioManager to play specific or randomised background music, to play sound effects, to change music on level change etc.
-- UI/UX for game states (win, lose, draw), health, title screen etc.
+- UI/UX for game states (win, lose, draw), pause, settings, health, title screen etc.
 
 ### TODO:
 
 - [ ] Screen Transition Fade In/out & some more UI/UX enhancements
 - [ ] More challenges for both single & multi player mode
-- [ ] Particle effects on item collection
+- [ ] Particle effects
 - [ ] Gamepad support
 - [ ] Input remapping
-- [ ] Settings & Pause menu
+- [x] Settings & Pause menu
 
 ## Credits & Attributions
 

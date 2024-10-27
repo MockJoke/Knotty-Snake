@@ -30,6 +30,7 @@ public class SettingsMenu : MonoBehaviour
     
     public void OpenMenu()
     {
+        AudioManager.Instance.PlaySound(AudioType.SceneTransition);
         SetVolumeSliderValues();
         SettingsCanvas.SetActive(true);
     }

@@ -185,11 +185,18 @@ public class AudioManager : MonoBehaviour
         volReduceFactor = factor;
     }
 
-    public void ReduceBgmVolume(float factor)
+    public void ReduceCurrBgVolumeInMenu(float factor = 2.5f)
     {
         SetVolReduceFactor(factor);
         
-        bgSounds[currBgMusicIndex].source.volume /= volReduceFactor;
+        bgSounds[currBgMusicIndex].source.volume = bgSounds[currBgMusicIndex].volume / volReduceFactor * mVol;
+    }
+
+    public void ResetCurrBgVolumeAfterMenu(float factor = 1f)
+    {
+        SetVolReduceFactor(factor);
+        
+        bgSounds[currBgMusicIndex].source.volume = bgSounds[currBgMusicIndex].volume / volReduceFactor * mVol;
     }
 
     public void StopMusic()

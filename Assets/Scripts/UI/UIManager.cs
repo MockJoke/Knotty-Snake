@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private Canvas GamePlayCanvas;
     [SerializeField] private Canvas GameOverCanvas;
+    [SerializeField] private PauseMenu PauseMenu;
     
     [SerializeField] private Transform PlayerPanelContainer;
     [SerializeField] private PlayerGamePanel playerPanelPrefab;

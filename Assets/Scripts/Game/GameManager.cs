@@ -9,7 +9,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
     
     [SerializeField] private BoxCollider2D WrappedArea;
-    [SerializeField] private SnakeController snakePrefab;
+    [SerializeField] private SnakeController SnakePrefab;
+    [SerializeField] private Transform PlayerContainer;
 
     [SerializeField] private KeyBinding[] InputKeyBindings;
     [SerializeField] private PlayerColor[] PlayerColors;
@@ -21,6 +22,7 @@ public class GameManager : MonoBehaviour
     private List<PlayerData> deadPlayers = new List<PlayerData>();
     
     public bool IsGameOver { get; private set; }
+    public bool IsGamePaused { get; private set; }
 
     #region MonoBehaviour Methods
 
@@ -73,7 +75,8 @@ public class GameManager : MonoBehaviour
         
         for (int i = 0; i < count; i++)
         {
-            GameObject snakeInstance = Instantiate(snakePrefab.gameObject, Vector3.zero, Quaternion.identity);
+            GameObject snakeInstance = Instantiate(SnakePrefab.gameObject, Vector3.zero, Quaternion.identity);
+            snakeInstance.transform.SetParent(PlayerContainer);
             snakeInstance.name = $"Player [{i + 1}]";
             PlayerData playerData = new PlayerData(i + 1, InputKeyBindings[i], PlayerColors[i], playerStartPositions[i], snakeInstance.GetComponent<SnakeController>());
             
@@ -192,6 +195,11 @@ public class GameManager : MonoBehaviour
     }
 
     #endregion
+
+    public void PauseGame(bool toggle)
+    {
+        IsGamePaused = toggle;
+    }
     
     private IEnumerator CallMethodAfterDelay(GameResult result, string msg, float delay)
     {

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
-    [Header("Menu Canvases")] 
+    [Header("Menu Containers")] 
     [SerializeField] private GameObject MainMenuCanvas;
     [SerializeField] private GameObject MainMenuDecoration;
     [SerializeField] private GameObject HelpMenuCanvas;
@@ -51,6 +51,7 @@ public class MainMenu : MonoBehaviour
     public void OnHelp()
     {
         CloseHomeMenu();
+        AudioManager.Instance.PlaySound(AudioType.SceneTransition);
         HelpMenuCanvas.SetActive(true);
     }
 

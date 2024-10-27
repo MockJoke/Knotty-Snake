@@ -47,7 +47,7 @@ public class SnakeController : MonoBehaviour
 
     void Update()
     {
-        if (playerData.IsAlive && !GameManager.Instance.IsGameOver)
+        if (playerData.IsAlive && !GameManager.Instance.IsGameOver && !GameManager.Instance.IsGamePaused)
         {
             SetInputMoveDirection();
             HandleMovement();

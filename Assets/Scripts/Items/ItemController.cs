@@ -19,7 +19,7 @@ public class ItemController<T> : MonoBehaviour where T : MonoBehaviour, ISpawnab
     
     void Update()
     {
-        if (GameManager.Instance.IsGameOver)
+        if (GameManager.Instance.IsGameOver || GameManager.Instance.IsGamePaused)
             return;
         
         itemSpawner.UpdateSpawner();

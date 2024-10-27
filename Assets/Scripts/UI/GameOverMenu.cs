@@ -25,7 +25,7 @@ public class GameOverMenu : MonoBehaviour
             RestartBtn.onClick.AddListener(OnRestart);
     }
 
-    private void OnHome()
+    public void OnHome()
     {
         StopGameOverSound();
         AudioManager.Instance.PlaySound(AudioType.SceneTransition);
@@ -33,7 +33,7 @@ public class GameOverMenu : MonoBehaviour
         SceneManager.LoadScene("Home");
     }
 
-    private void OnRestart()
+    public void OnRestart()
     {
         StopGameOverSound();
         AudioManager.Instance.PlaySound(AudioType.SceneTransition);

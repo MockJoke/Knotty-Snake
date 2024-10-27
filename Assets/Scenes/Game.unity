@@ -1185,9 +1185,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GamePlayCanvas: {fileID: 1140572789}
   GameOverCanvas: {fileID: 1593513609}
-  PauseMenu: {fileID: 0}
   PlayerPanelContainer: {fileID: 1095218078}
-  playerPanelPrefab: {fileID: 5615201538091621162, guid: 59735a479c6246c4aae5ebc46695f55b, type: 3}
+  PlayerPanelPrefab: {fileID: 5615201538091621162, guid: 59735a479c6246c4aae5ebc46695f55b, type: 3}
   resultColors:
   - result: 1
     color: {r: 0.54901963, g: 0.7529412, b: 0.26666668, a: 0.29411766}

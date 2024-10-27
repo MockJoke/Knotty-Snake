@@ -10,10 +10,9 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private Canvas GamePlayCanvas;
     [SerializeField] private Canvas GameOverCanvas;
-    [SerializeField] private PauseMenu PauseMenu;
     
     [SerializeField] private Transform PlayerPanelContainer;
-    [SerializeField] private PlayerGamePanel playerPanelPrefab;
+    [SerializeField] private PlayerGamePanel PlayerPanelPrefab;
 
     [Serializable]
     private struct ResultColor
@@ -48,7 +47,7 @@ public class UIManager : MonoBehaviour
         
         // evenly position the player panels
         float parentWidth = PlayerPanelContainer.GetComponent<RectTransform>().rect.width;
-        float panelWidth = playerPanelPrefab.GetComponent<RectTransform>().rect.width;
+        float panelWidth = PlayerPanelPrefab.GetComponent<RectTransform>().rect.width;
 
         var spacing = players.Count == 1
             ? 0
@@ -56,7 +55,7 @@ public class UIManager : MonoBehaviour
 
         for (int i = 0; i < players.Count; i++)
         {
-            PlayerGamePanel panel = Instantiate(playerPanelPrefab, PlayerPanelContainer, true);
+            PlayerGamePanel panel = Instantiate(PlayerPanelPrefab, PlayerPanelContainer, false);
             panel.SetPlayerID(players[i].PlayerID);
             panel.SetPlayerIndicator(players[i].Color.HeadColor);
             playerPanels.Add(panel);
